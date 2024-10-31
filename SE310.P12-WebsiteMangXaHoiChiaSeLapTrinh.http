@@ -1,0 +1,6 @@
+@SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh_HostAddress = http://localhost:5114
+
+GET {{SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
