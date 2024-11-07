@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<StackOverflowDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectstring")));
+builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
