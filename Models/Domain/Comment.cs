@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
-public partial class Answer
+public partial class Comment
 {
     public Guid Id { get; set; }
 
@@ -16,10 +16,6 @@ public partial class Answer
     public Guid? UserId { get; set; }
 
     public Guid? PostId { get; set; }
-
-    public int Upvote { get; set; }
-
-    public int Downvote { get; set; }
 
     public virtual Post? Post { get; set; }
 
