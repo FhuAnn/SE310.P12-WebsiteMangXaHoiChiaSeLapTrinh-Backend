@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Data;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 
 #nullable disable
 

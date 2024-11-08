@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
 public partial class UserRole
 {
