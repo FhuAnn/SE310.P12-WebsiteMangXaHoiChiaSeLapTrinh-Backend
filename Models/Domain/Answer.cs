@@ -5,7 +5,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
 public partial class Answer
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Body { get; set; } = null!;
 

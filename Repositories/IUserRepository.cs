@@ -2,8 +2,7 @@
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
 {
-    public interface ICommentRepository:IStackOverflowRepository<Comment>
+    public interface IUserRepository : IStackOverflowRepository<User>
     {
-
     }
 }

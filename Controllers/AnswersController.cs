@@ -44,7 +44,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult<Answer>> GetById(Guid id)
         {
             //Get answer model from DB
-            var answerDomain = await answerRepository.GetByIdAsync(id);
+            var answerDomain = await answerRepository.GetByIdAsync(x=>x.Id==id);
 
             if (answerDomain == null)
             {
@@ -80,7 +80,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var answerDomain = mapper.Map<Answer>(updateAnswerRequestDto);
             
             //Check if region exits
-            answerDomain = await answerRepository.UpdateAsync(id, answerDomain);
+            answerDomain = await answerRepository.UpdateAsync(x=> x.Id==id, entity =>
+            {
+                entity.Body = answerDomain.Body;
+                entity.Id = answerDomain.Id;
+            });
             if(answerDomain == null) { return NotFound(); }
             
             //Convert Domain Model to DTO
@@ -93,7 +97,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> DeleteAnswer(Guid id)
         {
             //Check if region exits
-            var answerDomain = answerRepository.DeleteAsync(id);
+            var answerDomain = answerRepository.DeleteAsync(x=>x.Id==id);
             if(answerDomain == null) { return NotFound(); }
 
             //Map Domain Model to DTO

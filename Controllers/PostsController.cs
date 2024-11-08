@@ -20,11 +20,16 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
     public class PostsController : ControllerBase
     {
         private readonly IPostRepository postRepository;
+        private readonly IUserRepository userRepository;
+        private readonly ITagRepository tagRepository;
+        
         private readonly IMapper mapper;
 
-        public PostsController(IPostRepository postRepository, IMapper mapper)
+        public PostsController(IPostRepository postRepository, IUserRepository userRepository, ITagRepository tagRepository, IMapper mapper)
         {
             this.postRepository = postRepository;
+            this.userRepository = userRepository;
+            this.tagRepository = tagRepository;
             this.mapper = mapper;
         }
 
@@ -32,8 +37,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+
+
             //Get Data from Database - Domain models
             var postDomain = await postRepository.GetAllAsync();
+
+            /*var tagList = await*/
+
+
             //Convert Domain to Dto
             return Ok(mapper.Map<List<PostDto>>(postDomain));
         }
@@ -42,7 +53,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult<Post>> GetById(Guid id)
         {
             //Get answer model from DB
-            var postDomain = await postRepository.GetByIdAsync(id);
+            var postDomain = await postRepository.GetByIdAsync(x => x.Id == id);
 
             if (postDomain == null)
             {
@@ -52,7 +63,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Return DTO back to client
             return Ok(mapper.Map<PostDto>(postDomain));
         }
-
         // POST: api/Posts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -78,7 +88,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var postDomain = mapper.Map<Post>(updatePostRequestDto);
 
             //Check if region exits
-            postDomain = await postRepository.UpdateAsync(id, postDomain);
+            postDomain = await postRepository.UpdateAsync(x => x.Id == id, entity =>
+            {
+                entity.Body = postDomain.Body;
+                entity.Id = postDomain.Id;
+            });
             if (postDomain == null) { return NotFound(); }
 
             //Convert Domain Model to DTO
@@ -91,11 +105,28 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> DeletePost(Guid id)
         {
             //Check if region exits
-            var postDomain = postRepository.DeleteAsync(id);
+            var postDomain = postRepository.DeleteAsync(x => x.Id == id);
             if (postDomain == null) { return NotFound(); }
 
             //Map Domain Model to DTO
             return Ok(mapper.Map<Post>(postDomain));
+        }
+
+        [HttpGet]
+        [Route("details/{postId}")]
+        public async Task<ActionResult> GetPostDetails(Guid postId)
+        {
+            var postDomain = await postRepository.GetPostDetailsAsync(postId);
+
+            if (postDomain == null)
+            {
+                return NotFound();
+            }
+
+            // Chuyển đổi dữ liệu thành DTO
+            var postDto = mapper.Map<PostDto>(postDomain);
+
+            return Ok(postDto);
         }
     }
 }

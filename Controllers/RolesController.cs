@@ -42,7 +42,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult<Role>> GetById(Guid id)
         {
             //Get answer model from DB
-            var roleDomain = await roleRepository.GetByIdAsync(id);
+            var roleDomain = await roleRepository.GetByIdAsync(x=>x.Id==id);
 
             if (roleDomain == null)
             {
@@ -78,7 +78,12 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var roleDomain = mapper.Map<Role>(updateRoleRequestDto);
 
             //Check if region exits
-            roleDomain = await roleRepository.UpdateAsync(id, roleDomain);
+            roleDomain = await roleRepository.UpdateAsync(x => x.Id == id, entity =>
+            {
+                entity.RoleName = roleDomain.RoleName;
+                entity.Description = roleDomain.Description;
+                entity.UpdatedAt= roleDomain.UpdatedAt;
+            });
             if (roleDomain == null) { return NotFound(); }
 
             //Convert Domain Model to DTO
@@ -91,7 +96,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> DeleteRole(Guid id)
         {
             //Check if region exits
-            var roleDomain = roleRepository.DeleteAsync(id);
+            var roleDomain = roleRepository.DeleteAsync(x => x.Id == id);
             if (roleDomain == null) { return NotFound(); }
 
             //Map Domain Model to DTO

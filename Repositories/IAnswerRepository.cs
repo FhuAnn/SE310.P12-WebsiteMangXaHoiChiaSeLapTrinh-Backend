@@ -2,12 +2,7 @@
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
 {
-    public interface IAnswerRepository
+    public interface IAnswerRepository:IStackOverflowRepository<Answer>
     {
-        Task<List<Answer>> GetAllAsync();
-        Task<Answer> GetByIdAsync(Guid id);
-        Task<Answer> CreateAsync(Answer answer);
-        Task<Answer> UpdateAsync(Guid id, Answer answer);
-        Task<Answer> DeleteAsync(Guid id);
     }
 }

@@ -15,9 +15,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<StackOverflowDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectstring")));
 builder.Services.AddScoped<IAnswerRepository, SQLAnswerRepository>();
-builder.Services.AddScoped<ICommentRepository, SQLCommentRepository>();
+
 builder.Services.AddScoped<IPostRepository, SQLPostRepository>();
+builder.Services.AddScoped<ICommentRepository, SQLCommentRepository>();
 builder.Services.AddScoped<IRoleRepository, SQLRoleRepository>();
+builder.Services.AddScoped(typeof(IStackOverflowRepository<>),typeof(StackOverflowRepository<>));
 builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 var app = builder.Build();
 

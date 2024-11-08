@@ -42,7 +42,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult<Comment>> GetById(Guid id)
         {
             //Get answer model from DB
-            var commentDomain = await commentRepository.GetByIdAsync(id);
+            var commentDomain = await commentRepository.GetByIdAsync(x=>x.Id==id);
 
             if (commentDomain == null)
             {
@@ -78,7 +78,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var commentDomain = mapper.Map<Comment>(updateCommentRequestDto);
 
             //Check if region exits
-            commentDomain = await commentRepository.UpdateAsync(id, commentDomain);
+            commentDomain = await commentRepository.UpdateAsync(x => x.Id == id, entity =>
+            {
+                entity.Body = commentDomain.Body;
+                entity.Id = commentDomain.Id;
+            });
             if (commentDomain == null) { return NotFound(); }
 
             //Convert Domain Model to DTO
@@ -91,7 +95,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> DeleteComment(Guid id)
         {
             //Check if region exits
-            var commentDomain = commentRepository.DeleteAsync(id);
+            var commentDomain = commentRepository.DeleteAsync(x => x.Id == id);
             if (commentDomain == null) { return NotFound(); }
 
             //Map Domain Model to DTO

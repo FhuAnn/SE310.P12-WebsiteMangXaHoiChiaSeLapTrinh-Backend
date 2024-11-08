@@ -21,11 +21,12 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add
 
         public int Downvote { get; set; }
 
-/*        public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
 
-        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();*/
+        /*        public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
 
-        public virtual ICollection<Posttag> Posttags { get; set; } = new List<Posttag>();
+                public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();*/
+
+        /*public virtual ICollection<Posttag> Posttags { get; set; } = new List<Posttag>();*/
 
     }
 }
