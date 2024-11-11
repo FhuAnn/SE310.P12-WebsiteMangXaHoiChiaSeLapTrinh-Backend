@@ -12,11 +12,15 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.CustomValidateFilters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class PostsController : ControllerBase
     {
         private readonly IPostRepository postRepository;
@@ -66,6 +70,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         // POST: api/Posts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ValidateModel]
         public async Task<ActionResult<Post>> CreatePost([FromBody] AddPostRequestDto addPostDto)
         {
             //Convert DTO to Domain Model
@@ -82,6 +87,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         // PUT: api/Posts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ValidateModel]
         public async Task<IActionResult> UpdatePost(Guid id, UpdatePostRequestDto updatePostRequestDto)
         {
             //Map DTO to Domain Model

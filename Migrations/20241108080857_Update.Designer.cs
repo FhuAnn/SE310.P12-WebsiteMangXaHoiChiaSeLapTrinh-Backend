@@ -11,7 +11,7 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 {
-    [DbContext(typeof(StackOverflowDBContext))]
+    [DbContext(typeof(StackOverflowAuthDBContext))]
     [Migration("20241108080857_Update")]
     partial class Update
     {
