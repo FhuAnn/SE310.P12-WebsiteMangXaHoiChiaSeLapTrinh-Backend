@@ -12,11 +12,14 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.CustomValidateFilters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RolesController : ControllerBase
     {
         private readonly IRoleRepository roleRepository;
@@ -56,6 +59,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         // POST: api/Roles
         // To protect from overroleing attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ValidateModel]
         public async Task<ActionResult<Role>> CreateRole([FromBody] AddRoleRequestDto addRoleDto)
         {
             //Convert DTO to Domain Model
@@ -72,6 +76,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         // PUT: api/Roles/5
         // To protect from overroleing attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ValidateModel]
         public async Task<IActionResult> UpdateRole(Guid id, UpdateRoleRequestDto updateRoleRequestDto)
         {
             //Map DTO to Domain Model

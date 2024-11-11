@@ -10,7 +10,7 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 {
-    [DbContext(typeof(StackOverflowDBContext))]
+    [DbContext(typeof(StackOverflowAuthDBContext))]
     [Migration("20241107082719_InitialCreate")]
     partial class InitialCreate
     {

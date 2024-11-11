@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.CustomValidateFilters;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
@@ -17,6 +19,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class CommentsController : ControllerBase
     {
         private readonly ICommentRepository commentRepository;
@@ -56,6 +60,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         // POST: api/Comments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ValidateModel]
         public async Task<ActionResult<Comment>> CreateComment([FromBody] AddCommentRequestDto addCommentDto)
         {
             //Convert DTO to Domain Model
@@ -72,6 +77,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ValidateModel]
         public async Task<IActionResult> UpdateComment(Guid id, UpdateCommentRequestDto updateCommentRequestDto)
         {
             //Map DTO to Domain Model
