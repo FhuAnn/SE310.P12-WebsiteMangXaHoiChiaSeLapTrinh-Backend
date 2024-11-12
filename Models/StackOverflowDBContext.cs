@@ -35,7 +35,9 @@ public partial class StackOverflowDBContext : DbContext
     public virtual DbSet<WatchedTag> WatchedTags { get; set; }
     public virtual DbSet<IgnoredTag> IgnoredTags { get; set; }
 
-
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-7R66M1N;Initial Catalog=stackoverflow; Integrated Security=True;Trust Server Certificate=True");
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Answer>(entity =>
@@ -251,18 +253,49 @@ public partial class StackOverflowDBContext : DbContext
                 .HasConstraintName("FK__user_role__user___5441852A");
         });
 
+
         modelBuilder.Entity<WatchedTag>(entity =>
         {
-            entity.HasKey(e => new { e.TagId, e.UserId });
+            // Khóa ngoại đến bảng User
+            entity.HasOne(w => w.User)
+                .WithMany(u => u.WatchedTags)
+                .HasForeignKey(w => w.UserId)
+                .OnDelete(DeleteBehavior.Cascade) // Tùy chọn xóa liên quan
+                .HasConstraintName("FK__watched_tag__user");
+
+            // Khóa ngoại đến bảng Tag
+            entity.HasOne(w => w.Tag)
+                .WithMany()
+                .HasForeignKey(w => w.TagId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__watched_tag__tag");
+
+            entity.ToTable("watched_tags"); // Đặt tên bảng
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.TagId).HasColumnName("tag_id");
         });
 
         // Thiết lập quan hệ cho IgnoredTag
         modelBuilder.Entity<IgnoredTag>(entity =>
         {
             // Khóa ngoại đến bảng User
-            entity.HasKey(e => new { e.TagId, e.UserId });
-        });
+            entity.HasOne(i => i.User)
+                .WithMany(u => u.IgnoredTags)
+                .HasForeignKey(i => i.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__ignored_tag__user");
 
+            // Khóa ngoại đến bảng Tag
+            entity.HasOne(i => i.Tag)
+                .WithMany()
+                .HasForeignKey(i => i.TagId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__ignored_tag__tag");
+
+            entity.ToTable("ignored_tags"); // Đặt tên bảng
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.TagId).HasColumnName("tag_id");
+        });
 
         OnModelCreatingPartial(modelBuilder);
     }
