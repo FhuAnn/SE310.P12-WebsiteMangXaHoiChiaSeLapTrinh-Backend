@@ -1,4 +1,6 @@
-﻿namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
+﻿using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
+
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 {
     public class RoleDto
     {
@@ -12,6 +14,6 @@
 
         public DateTime UpdatedAt { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        //public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }

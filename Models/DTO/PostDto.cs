@@ -22,12 +22,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public int Downvote { get; set; }
 
-        public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
+        public virtual ICollection<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
 
-        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual ICollection<PosttagDto> Posttags { get; set; } = new List<PosttagDto>();
 
-        public virtual ICollection<Posttag> Posttags { get; set; } = new List<Posttag>();
-
-        public virtual User? User { get; set; }
+        public virtual UserDto? User { get; set; }
     }
 }

@@ -104,22 +104,32 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                     b.ToTable("comments", (string)null);
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoreTag", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoredTag", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tag_id");
+
+                    b.Property<Guid?>("TagId1")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("IgnoredAt")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("UserId", "TagId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("IgnoreTags");
+                    b.HasIndex("TagId1");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ignored_tags", (string)null);
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Post", b =>
@@ -334,20 +344,30 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.WatchedTag", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tag_id");
+
+                    b.Property<Guid?>("TagId1")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("WatchedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("UserId", "TagId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("WatchedTags");
+                    b.HasIndex("TagId1");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("watched_tags", (string)null);
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Answer", b =>
@@ -384,19 +404,25 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoreTag", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoredTag", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
-                        .WithMany("IgnoredByUsers")
+                        .WithMany()
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK__ignored_tag__tag");
+
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", null)
+                        .WithMany("IgnoredTags")
+                        .HasForeignKey("TagId1");
 
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
                         .WithMany("IgnoredTags")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK__ignored_tag__user");
 
                     b.Navigation("Tag");
 
@@ -454,16 +480,22 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.WatchedTag", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
-                        .WithMany("WatchedByUsers")
+                        .WithMany()
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK__watched_tag__tag");
+
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", null)
+                        .WithMany("WatchedTags")
+                        .HasForeignKey("TagId1");
 
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
                         .WithMany("WatchedTags")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK__watched_tag__user");
 
                     b.Navigation("Tag");
 
@@ -486,11 +518,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", b =>
                 {
-                    b.Navigation("IgnoredByUsers");
+                    b.Navigation("IgnoredTags");
 
                     b.Navigation("Posttags");
 
-                    b.Navigation("WatchedByUsers");
+                    b.Navigation("WatchedTags");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", b =>

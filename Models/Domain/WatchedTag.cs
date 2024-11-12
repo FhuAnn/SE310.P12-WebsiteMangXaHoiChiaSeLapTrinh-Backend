@@ -2,12 +2,11 @@
 {
     public class WatchedTag
     {
-        public Guid UserId { get; set; }
-        public virtual User? User { get; set; }
-
+        public Guid Id { get; set; }
         public Guid TagId { get; set; }
-        public virtual Tag? Tag { get; set; }
+        public Guid UserId { get; set; }
+        public virtual User User { get; set; } = null!;
 
-        public DateTime WatchedAt { get; set; } = DateTime.Now;
+        public virtual Tag Tag { get; set; } = null!;
     }
 }

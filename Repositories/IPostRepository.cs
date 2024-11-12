@@ -2,12 +2,9 @@
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
 {
-    public interface IPostRepository
+    public interface IPostRepository:IStackOverflowRepository<Post>
     {
-        Task<List<Post>> GetAllAsync();
-        Task<Post> GetByIdAsync(Guid id);
-        Task<Post> CreateAsync(Post post);
-        Task<Post> UpdateAsync(Guid id, Post post);
-        Task<Post> DeleteAsync(Guid id);
+        Task<Post> GetPostDetailsAsync(Guid id);
+        Task<List<Post>> GetPostHomesAsync();
     }
 }
