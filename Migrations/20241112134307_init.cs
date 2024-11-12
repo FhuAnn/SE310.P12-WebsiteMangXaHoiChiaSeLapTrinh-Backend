@@ -3,99 +3,79 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 {
     /// <inheritdoc />
-    public partial class AddWatchedTagAndIgnoredTag : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             
-            
+
             migrationBuilder.CreateTable(
-                name: "ignored_tags",
+                name: "ignoredtags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    tag_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ignored_tags", x => x.Id);
+                    table.PrimaryKey("PK_ignoredtags", x => new { x.UserId, x.TagId });
                     table.ForeignKey(
-                        name: "FK__ignored_tag__tag",
-                        column: x => x.tag_id,
+                        name: "FK_ignoredtags_tags_TagId",
+                        column: x => x.TagId,
                         principalTable: "tags",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__ignored_tag__user",
-                        column: x => x.user_id,
+                        name: "FK_ignoredtags_users_UserId",
+                        column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                   
                 });
-
-           
 
             
 
             migrationBuilder.CreateTable(
-                name: "watched_tags",
+                name: "watchedtags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    tag_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_watched_tags", x => x.Id);
+                    table.PrimaryKey("PK_watchedtags", x => new { x.UserId, x.TagId });
                     table.ForeignKey(
-                        name: "FK__watched_tag__tag",
-                        column: x => x.tag_id,
+                        name: "FK_watchedtags_tags_TagId",
+                        column: x => x.TagId,
                         principalTable: "tags",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__watched_tag__user",
-                        column: x => x.user_id,
+                        name: "FK_watchedtags_users_UserId",
+                        column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                   
                 });
 
             
 
+            migrationBuilder.CreateIndex(
+                name: "IX_ignoredtags_TagId",
+                table: "ignoredtags",
+                column: "TagId");
 
+            
 
             migrationBuilder.CreateIndex(
-                name: "IX_ignored_tags_tag_id",
-                table: "ignored_tags",
-                column: "tag_id");
-
-        
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ignored_tags_user_id",
-                table: "ignored_tags",
-                column: "user_id");
-
-           
-            migrationBuilder.CreateIndex(
-                name: "IX_watched_tags_tag_id",
-                table: "watched_tags",
-                column: "tag_id");
-
-         
-            migrationBuilder.CreateIndex(
-                name: "IX_watched_tags_user_id",
-                table: "watched_tags",
-                column: "user_id");
+                name: "IX_watchedtags_TagId",
+                table: "watchedtags",
+                column: "TagId");
         }
 
         /// <inheritdoc />
@@ -108,7 +88,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                 name: "comments");
 
             migrationBuilder.DropTable(
-                name: "ignored_tags");
+                name: "IgnoredTags");
 
             migrationBuilder.DropTable(
                 name: "posttag");
@@ -117,7 +97,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                 name: "user_roles");
 
             migrationBuilder.DropTable(
-                name: "watched_tags");
+                name: "WatchedTags");
 
             migrationBuilder.DropTable(
                 name: "posts");

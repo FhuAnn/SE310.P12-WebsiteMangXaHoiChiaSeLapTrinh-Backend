@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 {
     public class LoginRequestDto
     {

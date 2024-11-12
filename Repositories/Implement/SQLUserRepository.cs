@@ -1,4 +1,5 @@
-﻿using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
@@ -10,6 +11,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         public SQLUserRepository(StackOverflowDBContext context) : base(context)
         {
             this.context = context;
+        }
+
+       
+
+        public async Task<User> Authenticate(string email, string password)
+        {
+            var result = await context.Users.SingleOrDefaultAsync(user => user.Email.Equals(email) && user.Password.Equals(password));
+            return result;
         }
     }
 }

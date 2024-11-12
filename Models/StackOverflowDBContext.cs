@@ -40,6 +40,32 @@ public partial class StackOverflowDBContext : DbContext
         => optionsBuilder.UseSqlServer("Data Source=DESKTOP-7R66M1N;Initial Catalog=stackoverflow; Integrated Security=True;Trust Server Certificate=True");
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Posttag>(entity =>
+{
+    entity.HasKey(e => new { e.PostId, e.TagId }).HasName("PK__posttag__4AFEED4DC067451F");
+
+    entity.ToTable("posttag");
+
+    entity.Property(e => e.PostId).HasColumnName("post_id");
+    entity.Property(e => e.TagId).HasColumnName("tag_id");
+    entity.Property(e => e.CreatedAt)
+        .HasColumnType("datetime")
+        .HasColumnName("created_at");
+    entity.Property(e => e.UpdatedAt)
+        .HasColumnType("datetime")
+        .HasColumnName("updated_at");
+
+    entity.HasOne(d => d.Post).WithMany(p => p.Posttags)
+        .HasForeignKey(d => d.PostId)
+        .OnDelete(DeleteBehavior.ClientSetNull)
+        .HasConstraintName("FK__posttag__post_id__4222D4EF");
+
+    entity.HasOne(d => d.Tag).WithMany(p => p.Posttags)
+        .HasForeignKey(d => d.TagId)
+        .OnDelete(DeleteBehavior.ClientSetNull)
+        .HasConstraintName("FK__posttag__tag_id__4316F928");
+});
+
         modelBuilder.Entity<Answer>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__answers__3213E83F376D8E7A");
@@ -127,31 +153,7 @@ public partial class StackOverflowDBContext : DbContext
                 .HasConstraintName("FK__posts__user_id__3F466844");
         });
 
-        modelBuilder.Entity<Posttag>(entity =>
-        {
-            entity.HasKey(e => new { e.PostId, e.TagId }).HasName("PK__posttag__4AFEED4DC067451F");
-
-            entity.ToTable("posttag");
-
-            entity.Property(e => e.PostId).HasColumnName("post_id");
-            entity.Property(e => e.TagId).HasColumnName("tag_id");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-
-            entity.HasOne(d => d.Post).WithMany(p => p.Posttags)
-                .HasForeignKey(d => d.PostId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__posttag__post_id__4222D4EF");
-
-            entity.HasOne(d => d.Tag).WithMany(p => p.Posttags)
-                .HasForeignKey(d => d.TagId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__posttag__tag_id__4316F928");
-        });
+      
 
         modelBuilder.Entity<Role>(entity =>
         {
@@ -199,6 +201,8 @@ public partial class StackOverflowDBContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
+
+            
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -252,50 +256,38 @@ public partial class StackOverflowDBContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__user_role__user___5441852A");
         });
-
-
         modelBuilder.Entity<WatchedTag>(entity =>
         {
-            // Khóa ngoại đến bảng User
-            entity.HasOne(w => w.User)
-                .WithMany(u => u.WatchedTags)
-                .HasForeignKey(w => w.UserId)
-                .OnDelete(DeleteBehavior.Cascade) // Tùy chọn xóa liên quan
-                .HasConstraintName("FK__watched_tag__user");
+            // Define composite primary key for WatchedTag
+            entity.HasKey(wt => new { wt.UserId, wt.TagId });
 
-            // Khóa ngoại đến bảng Tag
-            entity.HasOne(w => w.Tag)
-                .WithMany()
-                .HasForeignKey(w => w.TagId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__watched_tag__tag");
+            // Configure User-Tag relationship for WatchedTag
+            entity.HasOne(wt => wt.User)
+                  .WithMany(u => u.WatchedTags)
+                  .HasForeignKey(wt => wt.UserId);
 
-            entity.ToTable("watched_tags"); // Đặt tên bảng
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-            entity.Property(e => e.TagId).HasColumnName("tag_id");
+            entity.HasOne(wt => wt.Tag)
+                  .WithMany(t => t.WatchedTags)
+                  .HasForeignKey(wt => wt.TagId);
         });
 
-        // Thiết lập quan hệ cho IgnoredTag
+        // Configure IgnoredTag
         modelBuilder.Entity<IgnoredTag>(entity =>
         {
-            // Khóa ngoại đến bảng User
-            entity.HasOne(i => i.User)
-                .WithMany(u => u.IgnoredTags)
-                .HasForeignKey(i => i.UserId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__ignored_tag__user");
+            // Define composite primary key for IgnoredTag
+            entity.HasKey(it => new { it.UserId, it.TagId });
 
-            // Khóa ngoại đến bảng Tag
-            entity.HasOne(i => i.Tag)
-                .WithMany()
-                .HasForeignKey(i => i.TagId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__ignored_tag__tag");
+            // Configure User-Tag relationship for IgnoredTag
+            entity.HasOne(it => it.User)
+                  .WithMany(u => u.IgnoredTags)
+                  .HasForeignKey(it => it.UserId);
 
-            entity.ToTable("ignored_tags"); // Đặt tên bảng
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-            entity.Property(e => e.TagId).HasColumnName("tag_id");
+            entity.HasOne(it => it.Tag)
+                  .WithMany(t => t.IgnoredTags)
+                  .HasForeignKey(it => it.TagId);
         });
+
+        
 
         OnModelCreatingPartial(modelBuilder);
     }
