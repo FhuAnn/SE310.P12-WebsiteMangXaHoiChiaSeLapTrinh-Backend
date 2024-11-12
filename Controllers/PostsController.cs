@@ -19,21 +19,16 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
 
     public class PostsController : ControllerBase
     {
         private readonly IPostRepository postRepository;
-        private readonly IUserRepository userRepository;
-        private readonly ITagRepository tagRepository;
-        
         private readonly IMapper mapper;
 
-        public PostsController(IPostRepository postRepository, IUserRepository userRepository, ITagRepository tagRepository, IMapper mapper)
+        public PostsController(IPostRepository postRepository, IMapper mapper)
         {
             this.postRepository = postRepository;
-            this.userRepository = userRepository;
-            this.tagRepository = tagRepository;
             this.mapper = mapper;
         }
 
@@ -52,6 +47,23 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Convert Domain to Dto
             return Ok(mapper.Map<List<PostDto>>(postDomain));
         }
+
+        [HttpGet("postshome")]
+ 
+        public async Task<IActionResult> GetPostsHome()
+        {
+
+
+            //Get Data from Database - Domain models
+            var postDomain = await postRepository.GetPostHomesAsync();
+   
+            /*var tagList = await*/
+
+
+            //Convert Domain to Dto
+            return Ok(mapper.Map<List<PostDto>>(postDomain));
+        }
+
         // GET: api/Posts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetById(Guid id)

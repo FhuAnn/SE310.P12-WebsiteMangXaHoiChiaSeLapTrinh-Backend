@@ -26,4 +26,6 @@ public partial class User
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
     public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    public virtual ICollection<WatchedTag> WatchedTags { get; set; } = new List<WatchedTag>();
+    public virtual ICollection<IgnoredTag> IgnoredTags { get; set; } = new List<IgnoredTag>();
 }

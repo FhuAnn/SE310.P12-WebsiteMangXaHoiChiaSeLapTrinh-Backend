@@ -69,7 +69,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = 
+        IssuerSigningKey =
         new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     }
@@ -97,23 +97,11 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-    {
-        //Allow only few origin
-        policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
-
-        //Allow all origins  
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-    });
-    options.AddPolicy("AllowOnlyLocalhost", policy =>
-    {
-        //Allow only few origin
-        policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
-
-        //Allow all origins  
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-    });
-}); 
+    options.AddPolicy("AllowSpecificOrigin",
+        policy => policy.WithOrigins("http://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
 
 
 var app = builder.Build();
@@ -122,10 +110,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true"));
 }
 
-app.UseCors("MyTestCors");
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
 

@@ -32,7 +32,10 @@ public partial class StackOverflowDBContext : DbContext
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
-    
+    public virtual DbSet<WatchedTag> WatchedTags { get; set; }
+    public virtual DbSet<IgnoredTag> IgnoredTags { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Answer>(entity =>
@@ -247,6 +250,19 @@ public partial class StackOverflowDBContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__user_role__user___5441852A");
         });
+
+        modelBuilder.Entity<WatchedTag>(entity =>
+        {
+            entity.HasKey(e => new { e.TagId, e.UserId });
+        });
+
+        // Thiết lập quan hệ cho IgnoredTag
+        modelBuilder.Entity<IgnoredTag>(entity =>
+        {
+            // Khóa ngoại đến bảng User
+            entity.HasKey(e => new { e.TagId, e.UserId });
+        });
+
 
         OnModelCreatingPartial(modelBuilder);
     }
