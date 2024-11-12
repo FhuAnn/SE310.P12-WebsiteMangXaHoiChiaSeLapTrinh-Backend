@@ -25,5 +25,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 
             return post;
         }
+
+        public async Task<List<Post>> GetPostHomesAsync()
+        {
+            var posts = await dbContext.Posts.Include(p => p.Posttags).ThenInclude(pt => pt.Tag).Include(p=>p.User).Include(p=>p.Answers).ToListAsync();
+            return posts;
+        }
     }
 }

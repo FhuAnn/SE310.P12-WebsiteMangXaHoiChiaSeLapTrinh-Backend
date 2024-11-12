@@ -14,6 +14,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public DateTime UpdatedAt { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        //public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }
