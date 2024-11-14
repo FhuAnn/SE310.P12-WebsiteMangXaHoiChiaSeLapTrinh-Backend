@@ -21,6 +21,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                .Include(p => p.Comments) // Bao gồm các bình luận
                .Include(p => p.Posttags)
                .ThenInclude(pt => pt.Tag) // Bao gồm các thẻ
+               .Include(p=>p.Images)
                .FirstOrDefaultAsync(p => p.Id == id); // Lọc theo ID bài viết
 
             return post;
@@ -30,6 +31,17 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         {
             var posts = await dbContext.Posts.Include(p => p.Posttags).ThenInclude(pt => pt.Tag).Include(p=>p.User).Include(p=>p.Answers).ToListAsync();
             return posts;
+        }
+
+        public async Task<Post> GetPostById(Guid postId)
+        {
+            return await dbContext.Posts.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == postId);
+        }
+
+        public async Task SavePost(Post post)
+        {
+            dbContext.Posts.Add(post);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

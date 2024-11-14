@@ -14,6 +14,10 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.CustomValidateFilters;
 using Microsoft.AspNetCore.Authorization;
+using NZWalk.API.Repositories;
+using Microsoft.AspNetCore.Hosting;
+using NZWalk.API.Models.DTO;
+using Azure.Core;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
@@ -26,12 +30,19 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         private readonly IPostRepository postRepository;
         private readonly IMapper mapper;
         private readonly IPosttagRepository posttagRepository;
+        private readonly IImageRepositiory imageRepository;
+        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public PostsController(IPostRepository postRepository, IMapper mapper, IPosttagRepository posttagRepository)
+        public PostsController(IPostRepository postRepository, IMapper mapper, IPosttagRepository posttagRepository, IImageRepositiory imageRepositiory,
+            IWebHostEnvironment webHostEnvironment,IHttpContextAccessor httpContextAccessor)
         {
             this.postRepository = postRepository;
             this.mapper = mapper;
             this.posttagRepository = posttagRepository;
+            this.imageRepository = imageRepositiory;
+            this.webHostEnvironment = webHostEnvironment;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         // GET: api/Posts
@@ -163,6 +174,62 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var postDto = mapper.Map<PostDto>(postDomain);
 
             return Ok(postDto);
+        }
+
+        [HttpPost("UploadImages/{postId}")]
+        public async Task<IActionResult> UploadImages(Guid postId, [FromForm] List<IFormFile> files)
+        {
+            var post = await postRepository.GetPostById(postId);
+            if (post == null)
+            {
+                return NotFound("Post not found.");
+            }
+            if (files.Count()==0)
+            {
+                return BadRequest("File List is empty!");
+            }
+            var imageListDto = new List<ImageDto>();
+
+            foreach (var file in files)
+            {
+                ValidateFileUpload(file);
+                if (ModelState.IsValid)
+                {
+                    // Kiểm tra và xử lý ảnh
+                    var image = new Image
+                    {
+                        file = file,
+                        fileExtension = Path.GetExtension(file.FileName),
+                        fileSizeInBytes = file.Length,
+                        postId=postId
+                        //FilePath = await SaveImageToLocal(file)
+                    };
+                    if (image.postId == null && image.postId == null)
+                    {
+                        return BadRequest("Ảnh phải liên kết với ít nhất một Post hoặc User.");
+                    }
+                    // Lưu ảnh vào cơ sở dữ liệu
+                    image = await imageRepository.Upload( image);
+                    var imageDto = mapper.Map<ImageDto>(image);
+                    imageListDto.Add(imageDto);
+                    continue;
+                }
+                return BadRequest(ModelState);
+            }
+            return Ok(imageListDto);
+        }
+        private void ValidateFileUpload(IFormFile file)
+        {
+            var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
+            if (!allowedExtensions.Contains(Path.GetExtension(file.FileName)))
+            {
+                ModelState.AddModelError("file", "Unsupported file extension");
+
+                if (file.Length > 10485760)
+                {
+                    ModelState.AddModelError("file", "File size more than 10MB, please upload a smaller size file");
+                }
+            }
         }
     }
 }

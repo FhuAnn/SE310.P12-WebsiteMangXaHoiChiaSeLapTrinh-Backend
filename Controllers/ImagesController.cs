@@ -20,21 +20,18 @@ namespace NZWalk.API.Controllers
 
         //Post: api/Images/Upload
         [HttpPost]
-        [Route("Upload")]
-        public async Task<IActionResult> UpLoad([FromForm] ImagesUploadRequestDto request)
+        [Route("Upload/{postId}")]
+        public async Task<IActionResult> UpLoad(Guid postId,[FromForm] ImagesUploadRequestDto request)
         {
-
             ValidateFileUpload(request);
             if (ModelState.IsValid)
             {
                 //convert DTO to Domain Model
                 var imageDomainModel = new Image
                 {
-                    File = request.File,
-                    FileExtension = Path.GetExtension(request.File.FileName),
-                    FileSizeInBytes = request.File.Length,
-                    FileName = request.FileName,
-                    FileDescription = request.FileDescription,
+                    file = request.File,
+                    fileExtension = Path.GetExtension(request.File.FileName),
+                    fileSizeInBytes = request.File.Length
                 };
 
                 //user repository to upload image

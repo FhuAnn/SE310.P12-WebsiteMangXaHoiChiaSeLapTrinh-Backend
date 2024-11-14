@@ -19,5 +19,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add
         [Required]
         public Guid? UserId { get; set; }
 
+
     }
 }
