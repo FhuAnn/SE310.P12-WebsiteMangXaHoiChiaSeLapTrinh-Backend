@@ -25,6 +25,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping
             CreateMap<Tag, TagDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<Posttag, PosttagDto>().ReverseMap();
+            CreateMap<Image, ImageDto>().ReverseMap();
 
         }
     }

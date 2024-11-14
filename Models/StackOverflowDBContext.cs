@@ -33,6 +33,8 @@ public partial class StackOverflowDBContext : DbContext
     public virtual DbSet<UserRole> UserRoles { get; set; }
     public virtual DbSet<WatchedTag> WatchedTags { get; set; }
     public virtual DbSet<IgnoredTag> IgnoredTags { get; set; }
+    public DbSet<Image> Images { get; set; }
+
 
     /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
  #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -273,7 +275,7 @@ public partial class StackOverflowDBContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.UserRoles)
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__user_role__role___6477ECF3");
+                .HasConstraintName("FK__user_role__role___5535A963");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserRoles)
                 .HasForeignKey(d => d.UserId)
