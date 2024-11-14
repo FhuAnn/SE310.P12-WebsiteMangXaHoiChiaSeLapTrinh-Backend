@@ -31,7 +31,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         {
             var user = new User
             {
-                Email = registerRequestDto.Email,
+                //Email = registerRequestDto.Email,
                 Username = registerRequestDto.Username,
                 Password = registerRequestDto.Password
             };
