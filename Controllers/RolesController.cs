@@ -19,7 +19,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    /*[Authorize]*/
     public class RolesController : ControllerBase
     {
         private readonly IRoleRepository roleRepository;
@@ -101,7 +101,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> DeleteRole(Guid id)
         {
             //Check if region exits
-            var roleDomain = roleRepository.DeleteAsync(x => x.Id == id);
+            var roleDomain =  await roleRepository.DeleteAsync(x => x.Id == id);
             if (roleDomain == null) { return NotFound(); }
 
             //Map Domain Model to DTO

@@ -4,5 +4,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
 {
     public interface ITagRepository : IStackOverflowRepository<Tag>
     {
+        Task<List<Tag>> SearchTagAsync(string searchTerm);
     }
 }

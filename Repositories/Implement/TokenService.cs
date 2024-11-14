@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,7 +15,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         {
             this.configuration = configuration;
         }
-        public string CreateJWTToken(IdentityUser user, List<string> roles)
+        public string CreateJWTToken(User user, List<string> roles)
         {
             var claims = new List<Claim>();
 

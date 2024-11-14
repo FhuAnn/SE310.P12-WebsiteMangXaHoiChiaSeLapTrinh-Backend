@@ -2,9 +2,8 @@
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
 {
-    public interface IRoleRepository:IStackOverflowRepository<Role>
+    public interface IUserRoleRepository : IStackOverflowRepository<UserRole>
     {
-        Task<Role> GetRoleByName(string roleName);
-       
+        Task<ICollection<string>> GetUserRole(Guid userId);
     }
 }

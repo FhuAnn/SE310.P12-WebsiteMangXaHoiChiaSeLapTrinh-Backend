@@ -16,10 +16,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
     public class TagsController : ControllerBase
     {
         private readonly ITagRepository tagRepository;
+        private readonly IWatchedTagRepository watchedTagRepository;
+        private readonly IIgnoreTagRepository ignoreTagRepository;
 
-        public TagsController(ITagRepository tagRepository)
+        public TagsController(ITagRepository tagRepository, IWatchedTagRepository watchedTagRepository, IIgnoreTagRepository ignoreTagRepository)
         {
             this.tagRepository = tagRepository;
+            this.watchedTagRepository = watchedTagRepository;
+            this.ignoreTagRepository = ignoreTagRepository;
         }
 
         // GET: api/Tags
@@ -75,6 +79,60 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
             return NoContent();
         }
-        
+
+        [HttpPost("watch")]
+        public async Task<IActionResult> WatchTag(Guid userId, Guid tagId)
+        {
+            var watchedTag = new WatchedTag { UserId = userId, TagId = tagId };
+            var existWatchedTag = await watchedTagRepository.GetByIdAsync(wt => wt.TagId == tagId && wt.UserId == userId);
+            var existIgnoredTag = await ignoreTagRepository.DeleteAsync(it => it.TagId == tagId && it.UserId == userId);
+            if (existWatchedTag != null)
+            {
+                return Content("Da co tag ");
+            }
+
+            var insertWatchedTag = await watchedTagRepository.CreateAsync(watchedTag);
+            return Ok(insertWatchedTag != null ? "Theo doi tag thanh cong" : "Theo doi tag khong thanh cong");
+        }
+
+        [HttpPost("ignore")]
+        public async Task<IActionResult> IgnoreTag(Guid userId, Guid tagId)
+        {
+            var ignoredTag = new IgnoredTag { UserId = userId, TagId = tagId };
+            var existIgnoredTag = await ignoreTagRepository.GetByIdAsync(it => it.TagId == tagId && it.UserId == userId);
+            var existWatchedTag = await watchedTagRepository.DeleteAsync(wt => wt.TagId == tagId && wt.UserId == userId);
+            if (existIgnoredTag != null)
+            {
+                return Content("Da co tag ");
+            }
+
+            var insertIgnoredTag = await ignoreTagRepository.CreateAsync(ignoredTag);
+            return Ok(insertIgnoredTag != null ? "Bo theo doi tag thanh cong" :"Bo theo doi tag khong thanh cong");
+        }
+
+        [HttpDelete("unwatch")]
+        public async Task<IActionResult> UnwatchTag(Guid userId, Guid tagId)
+        {
+            var result = await watchedTagRepository.DeleteAsync(wt => wt.UserId == userId && wt.TagId == tagId);
+            if (result != null)
+                return Ok("Xoa thanh cong");
+            return Content("Co gi do sai sai");
+        }
+
+        [HttpDelete("unignore")]
+        public async Task<IActionResult> UnignoreTag(Guid userId, Guid tagId)
+        {
+            var result = await ignoreTagRepository.DeleteAsync(wt => wt.UserId == userId && wt.TagId == tagId);
+            if (result != null)
+                return Ok("Xoa thanh cong");
+            return Content("Co gi do sai sai");
+        }
+
+        [HttpGet("search/{searchTerm}")]
+        public async Task<IActionResult> SearchTag(string searchTerm)
+        {
+            var taglist = await tagRepository.SearchTagAsync(searchTerm);
+            return Ok(taglist);
+        }
     }
 }

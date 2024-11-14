@@ -10,22 +10,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add
         public string Title { get; set; } = null!;
 
         [Required]
-        public string Body { get; set; } = null!;
-
-        public int Views { get; set; }
+        public string DetailProblem { get; set; } = null!;
+        [Required]
+        public string TryAndExpecting { get; set; } = null!;
 
         [Required]
-        public DateTime CreatedAt { get; set; }
-
-        [Required]
-        public DateTime UpdatedAt { get; set; }
-
+        public Guid[] TagId { get; set; } = null!;
         [Required]
         public Guid? UserId { get; set; }
-
-        public int Upvote { get; set; }
-
-        public int Downvote { get; set; }
 
     }
 }

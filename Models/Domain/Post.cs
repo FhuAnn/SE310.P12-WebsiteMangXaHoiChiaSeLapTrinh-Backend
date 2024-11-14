@@ -9,13 +9,14 @@ public partial class Post
 
     public string Title { get; set; } = null!;
 
-    public string Body { get; set; } = null!;
+    public string DetailProblem { get; set; } = null!;
+    public string TryAndExpecting { get; set; } = null!;
 
     public int Views { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public Guid? UserId { get; set; }
 

@@ -8,7 +8,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public string Title { get; set; } = null!;
 
-        public string Body { get; set; } = null!;
+        public string DetailProblem { get; set; } = null!; 
+
+        public string TryAndExpecting { get; set; } = null!;
 
         public int Views { get; set; }
 

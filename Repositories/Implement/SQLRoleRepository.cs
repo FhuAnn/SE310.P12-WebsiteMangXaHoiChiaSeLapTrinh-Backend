@@ -12,5 +12,15 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         {
             this.dbContext = dbContext;
         }
+
+        public async Task<Role> GetRoleByName(string roleName)
+        {
+            var result = await dbContext.Roles.SingleOrDefaultAsync(r => r.RoleName.Equals(roleName));
+            if(result == null)
+            {
+                return null;
+            }
+            return result;
+        }
     }
 }

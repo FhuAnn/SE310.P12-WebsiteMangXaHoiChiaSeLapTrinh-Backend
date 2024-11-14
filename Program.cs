@@ -50,7 +50,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<StackOverflowDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectstring")));
 builder.Services.AddDbContext<StackOverflowAuthDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbAuthConnectstring")));
 builder.Services.AddScoped<IAnswerRepository, SQLAnswerRepository>();
-
+builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
+builder.Services.AddScoped<IUserRoleRepository, SQLUserRoleRepository>();
 builder.Services.AddScoped<IPostRepository, SQLPostRepository>();
 builder.Services.AddScoped<ICommentRepository, SQLCommentRepository>();
 builder.Services.AddScoped<IRoleRepository, SQLRoleRepository>();
@@ -58,6 +59,7 @@ builder.Services.AddScoped<ITagRepository, SQLTagRepository>();
 builder.Services.AddScoped<IWatchedTagRepository, SQLWatchedTagRepository>();
 builder.Services.AddScoped<IIgnoreTagRepository, SQLIgnoredTagRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPosttagRepository, SQLPosttagRepository>();
 builder.Services.AddScoped(typeof(IStackOverflowRepository<>),typeof(StackOverflowRepository<>));
 builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 

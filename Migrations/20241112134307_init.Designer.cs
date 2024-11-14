@@ -11,9 +11,9 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 {
-    [DbContext(typeof(StackOverflowAuthDBContext))]
-    [Migration("20241108080857_Update")]
-    partial class Update
+    [DbContext(typeof(StackOverflowDBContext))]
+    [Migration("20241112134307_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -105,6 +105,21 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("comments", (string)null);
+                });
+
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoredTag", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("IgnoredTags");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Post", b =>
@@ -216,7 +231,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.ToTable("roles", (string)null);
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Tag", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier")
@@ -250,7 +265,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.ToTable("tags", (string)null);
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.User", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier")
@@ -259,6 +274,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gravatar")
                         .IsRequired()
@@ -295,7 +314,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.UserRole", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier")
@@ -317,6 +336,21 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.ToTable("user_roles", (string)null);
                 });
 
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.WatchedTag", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("WatchedTags");
+                });
+
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Answer", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Post", "Post")
@@ -324,7 +358,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                         .HasForeignKey("PostId")
                         .HasConstraintName("FK__answers__post_id__4AB81AF0");
 
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.User", "User")
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
                         .WithMany("Answers")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK__answers__user_id__49C3F6B7");
@@ -341,7 +375,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                         .HasForeignKey("PostId")
                         .HasConstraintName("FK__comments__post_i__46E78A0C");
 
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.User", "User")
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK__comments__user_i__45F365D3");
@@ -351,9 +385,28 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoredTag", b =>
+                {
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
+                        .WithMany("IgnoredTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
+                        .WithMany("IgnoredTags")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tag");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Post", b =>
                 {
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.User", "User")
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK__posts__user_id__3F466844");
@@ -369,7 +422,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                         .IsRequired()
                         .HasConstraintName("FK__posttag__post_id__4222D4EF");
 
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Tag", "Tag")
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
                         .WithMany("Posttags")
                         .HasForeignKey("TagId")
                         .IsRequired()
@@ -380,7 +433,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.UserRole", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.UserRole", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Role", "Role")
                         .WithMany("UserRoles")
@@ -388,13 +441,32 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                         .IsRequired()
                         .HasConstraintName("FK__user_role__role___5535A963");
 
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.User", "User")
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .IsRequired()
                         .HasConstraintName("FK__user_role__user___5441852A");
 
                     b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.WatchedTag", b =>
+                {
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
+                        .WithMany("WatchedTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
+                        .WithMany("WatchedTags")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tag");
 
                     b.Navigation("User");
                 });
@@ -413,20 +485,28 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Tag", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", b =>
                 {
+                    b.Navigation("IgnoredTags");
+
                     b.Navigation("Posttags");
+
+                    b.Navigation("WatchedTags");
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.User", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", b =>
                 {
                     b.Navigation("Answers");
 
                     b.Navigation("Comments");
 
+                    b.Navigation("IgnoredTags");
+
                     b.Navigation("Posts");
 
                     b.Navigation("UserRoles");
+
+                    b.Navigation("WatchedTags");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,9 +2,7 @@
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
 {
-    public interface IRoleRepository:IStackOverflowRepository<Role>
+    public interface IPosttagRepository : IStackOverflowRepository<Posttag>
     {
-        Task<Role> GetRoleByName(string roleName);
-       
     }
 }

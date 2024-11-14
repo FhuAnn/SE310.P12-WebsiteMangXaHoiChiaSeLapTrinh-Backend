@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 
 #nullable disable
 
-namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 {
     [DbContext(typeof(StackOverflowDBContext))]
-    [Migration("20241112083417_AddWatchedTagAndIgnoredTag")]
-    partial class AddWatchedTagAndIgnoredTag
+    partial class StackOverflowDBContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,30 +106,17 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoredTag", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TagId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("tag_id");
-
-                    b.Property<Guid?>("TagId1")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "TagId");
 
                     b.HasIndex("TagId");
 
-                    b.HasIndex("TagId1");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ignored_tags", (string)null);
+                    b.ToTable("IgnoredTags");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Post", b =>
@@ -141,14 +125,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("body");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("DetailProblem")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("detailproblem");
 
                     b.Property<int>("Downvote")
                         .HasColumnType("int")
@@ -159,6 +143,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)")
                         .HasColumnName("title");
+
+                    b.Property<string>("TryAndExpecting")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("tryandexpecting");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime")
@@ -288,6 +277,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Gravatar")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -347,30 +340,17 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.WatchedTag", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TagId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("tag_id");
-
-                    b.Property<Guid?>("TagId1")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "TagId");
 
                     b.HasIndex("TagId");
 
-                    b.HasIndex("TagId1");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("watched_tags", (string)null);
+                    b.ToTable("WatchedTags");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Answer", b =>
@@ -410,22 +390,16 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoredTag", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
-                        .WithMany()
+                        .WithMany("IgnoredTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__ignored_tag__tag");
-
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", null)
-                        .WithMany("IgnoredTags")
-                        .HasForeignKey("TagId1");
+                        .IsRequired();
 
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
                         .WithMany("IgnoredTags")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__ignored_tag__user");
+                        .IsRequired();
 
                     b.Navigation("Tag");
 
@@ -483,22 +457,16 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.WatchedTag", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
-                        .WithMany()
+                        .WithMany("WatchedTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__watched_tag__tag");
-
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", null)
-                        .WithMany("WatchedTags")
-                        .HasForeignKey("TagId1");
+                        .IsRequired();
 
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
                         .WithMany("WatchedTags")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__watched_tag__user");
+                        .IsRequired();
 
                     b.Navigation("Tag");
 

@@ -5,19 +5,20 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
 public partial class User
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Username { get; set; } = null!;
 
     public string Password { get; set; } = null!;
 
-    public string Gravatar { get; set; } = null!;
+    public string Gravatar { get; set; } = "Default";
+    public string Email { get; set; } = null!;
 
     public int Views { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 
@@ -11,12 +12,16 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly IUserRepository userRepository;
+        private readonly IRoleRepository roleRepository;
+        private readonly IUserRoleRepository userRoleRepository;
         private readonly ITokenService tokenService;
 
-        public AuthController(UserManager<IdentityUser> userManager, ITokenService tokenService)
+        public AuthController(IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository, ITokenService tokenService)
         {
-            this.userManager = userManager;
+            this.userRepository = userRepository;
+            this.roleRepository = roleRepository;
+            this.userRoleRepository = userRoleRepository;
             this.tokenService = tokenService;
         }
 
@@ -24,26 +29,32 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
         {
-            var identityUser = new IdentityUser
+            var user = new User
             {
-                UserName = registerRequestDto.Username,
-                Email = registerRequestDto.Email
+                Email = registerRequestDto.Email,
+                Username = registerRequestDto.Username,
+                Password = registerRequestDto.Password
             };
 
-            var identityResult = await userManager.CreateAsync(identityUser, registerRequestDto.Password);
+            var userCreateResult = await userRepository.CreateAsync(user);
 
-            if (identityResult.Succeeded)
+
+            if (userCreateResult != null)
             {
                 // Add roles to this User
-                if (registerRequestDto.Roles != null && registerRequestDto.Roles.Any())
-                {
-                    identityResult = await userManager.AddToRolesAsync(identityUser, registerRequestDto.Roles);
 
-                    if (identityResult.Succeeded)
-                    {
-                        return Ok("User was registered! Please login");
-                    }
+                var role = await roleRepository.GetRoleByName("newbie");
+                var result = await userRoleRepository.CreateAsync(new UserRole
+                {
+                    UserId = userCreateResult.Id,
+                    RoleId = role.Id
+                });
+
+                if (result != null)
+                {
+                    return Ok("User was registered! Please login");
                 }
+
             }
 
             return BadRequest("Something went wrong");
@@ -54,32 +65,30 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
         {
 
-            var user = await userManager.FindByEmailAsync(loginRequestDto.Email);
+            var user = await userRepository.Authenticate(loginRequestDto.Email, loginRequestDto.Password);
 
             if (user != null)
             {
-                var checkPasswordResult = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 
-                if (checkPasswordResult)
+                // get role
+                var role = await userRoleRepository.GetUserRole(user.Id);
+                if (role != null)
                 {
-                     // get role
-                    var role = await userManager.GetRolesAsync(user);
-                    if (role != null)
+                    // create token
+
+                    var jwttoken = tokenService.CreateJWTToken(user, role.ToList());
+
+                    var loginResponse = new LoginResponseDto
                     {
-                        // create token
-
-                        var jwttoken = tokenService.CreateJWTToken(user, role.ToList());
-
-                        var loginResponse = new LoginResponseDto
-                        {
-                            JwtToken = jwttoken,
-                        };
-                        return Ok(loginResponse);
-                    }
-
-
-
+                        UserId = user.Id,
+                        JwtToken = jwttoken,
+                    };
+                    return Ok(loginResponse);
                 }
+
+
+
+
             }
 
             return BadRequest("Username or password incorrect");
