@@ -19,7 +19,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    /*[Authorize]*/
     public class AnswersController : ControllerBase
     {
         private readonly StackOverflowDBContext _context;

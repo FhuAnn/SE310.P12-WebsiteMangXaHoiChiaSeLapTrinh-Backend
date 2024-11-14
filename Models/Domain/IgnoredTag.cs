@@ -5,7 +5,7 @@
         public Guid TagId { get; set; }
         public Guid UserId { get; set; }
 
-        public virtual User User { get; set; }
-        public virtual Tag Tag { get; set; }
+        public User User { get; set; }
+        public Tag Tag { get; set; }
     }
 }

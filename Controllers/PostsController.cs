@@ -126,7 +126,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Check if region exits
             postDomain = await postRepository.UpdateAsync(x => x.Id == id, entity =>
             {
-                entity.DetailProblem = postDomain.DetailProblem;
+                entity.Detailproblem = postDomain.Detailproblem;
                 entity.Id = postDomain.Id;
             });
             if (postDomain == null) { return NotFound(); }
