@@ -59,6 +59,7 @@ builder.Services.AddScoped<ITagRepository, SQLTagRepository>();
 builder.Services.AddScoped<IWatchedTagRepository, SQLWatchedTagRepository>();
 builder.Services.AddScoped<IIgnoreTagRepository, SQLIgnoredTagRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPosttagRepository, SQLPosttagRepository>();
 builder.Services.AddScoped(typeof(IStackOverflowRepository<>),typeof(StackOverflowRepository<>));
 builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 

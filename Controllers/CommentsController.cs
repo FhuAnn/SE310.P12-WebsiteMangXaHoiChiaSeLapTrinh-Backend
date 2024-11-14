@@ -19,7 +19,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   /* [Authorize]*/
 
     public class CommentsController : ControllerBase
     {
@@ -101,7 +101,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> DeleteComment(Guid id)
         {
             //Check if region exits
-            var commentDomain = commentRepository.DeleteAsync(x => x.Id == id);
+            var commentDomain = await commentRepository.DeleteAsync(x => x.Id == id);
             if (commentDomain == null) { return NotFound(); }
 
             //Map Domain Model to DTO

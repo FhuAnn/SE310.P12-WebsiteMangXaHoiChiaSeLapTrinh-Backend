@@ -25,11 +25,13 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
     {
         private readonly IPostRepository postRepository;
         private readonly IMapper mapper;
+        private readonly IPosttagRepository posttagRepository;
 
-        public PostsController(IPostRepository postRepository, IMapper mapper)
+        public PostsController(IPostRepository postRepository, IMapper mapper, IPosttagRepository posttagRepository)
         {
             this.postRepository = postRepository;
             this.mapper = mapper;
+            this.posttagRepository = posttagRepository;
         }
 
         // GET: api/Posts
@@ -90,10 +92,26 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
             //Use Domain Model to create Post
             postDomain = await postRepository.CreateAsync(postDomain);
+           
 
+            if( postDomain == null)
+            {
+                return BadRequest("Da xay ra loi , Khong tao post duoc");
+            }
+
+            foreach(var item in addPostDto.TagId)
+            {
+
+                var posttag = await posttagRepository.CreateAsync(new Posttag
+                {
+                    PostId = postDomain.Id,
+                    TagId = item
+                });
+
+                if (posttag == null) return BadRequest("Da xay ra loi, Khong tao post duoc");
+            }
             //Convert Domain Model back to DTO
-            var PostDto = mapper.Map<PostDto>(postDomain);
-            return CreatedAtAction(nameof(GetById), new { id = PostDto.Id }, PostDto);
+            return Ok("tao post thanh cong");
         }
 
         // PUT: api/Posts/5
@@ -108,7 +126,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Check if region exits
             postDomain = await postRepository.UpdateAsync(x => x.Id == id, entity =>
             {
-                entity.Body = postDomain.Body;
+                entity.DetailProblem = postDomain.DetailProblem;
                 entity.Id = postDomain.Id;
             });
             if (postDomain == null) { return NotFound(); }

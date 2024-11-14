@@ -101,7 +101,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> DeleteRole(Guid id)
         {
             //Check if region exits
-            var roleDomain = roleRepository.DeleteAsync(x => x.Id == id);
+            var roleDomain =  await roleRepository.DeleteAsync(x => x.Id == id);
             if (roleDomain == null) { return NotFound(); }
 
             //Map Domain Model to DTO

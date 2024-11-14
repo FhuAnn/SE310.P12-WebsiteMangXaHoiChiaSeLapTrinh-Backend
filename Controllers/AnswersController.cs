@@ -102,7 +102,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> DeleteAnswer(Guid id)
         {
             //Check if region exits
-            var answerDomain = answerRepository.DeleteAsync(x=>x.Id==id);
+            var answerDomain = await answerRepository.DeleteAsync(x=>x.Id==id);
             if(answerDomain == null) { return NotFound(); }
 
             //Map Domain Model to DTO

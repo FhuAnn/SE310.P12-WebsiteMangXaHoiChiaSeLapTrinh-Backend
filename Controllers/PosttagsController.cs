@@ -2,123 +2,58 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    /*[Authorize]*/
     public class PosttagsController : ControllerBase
     {
-        private readonly StackOverflowDBContext _context;
+        private readonly IPosttagRepository posttagRepository;
+        private readonly IMapper mapper;
 
-        public PosttagsController(StackOverflowDBContext context)
+        public PosttagsController(IPosttagRepository posttagRepository, IMapper mapper)
         {
-            _context = context;
+            this.posttagRepository = posttagRepository;
+            this.mapper = mapper;
         }
 
         // GET: api/Posttags
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Posttag>>> GetPosttags()
+        public async Task<ActionResult<IEnumerable<PosttagDto>>> GetPosttags()
         {
-            return await _context.Posttags.ToListAsync();
+            var posttag = await posttagRepository.GetAllAsync();
+
+            var posttagDto = mapper.Map<IEnumerable<PosttagDto>>(posttag);
+
+            return Ok(posttagDto);
         }
 
-        // GET: api/Posttags/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Posttag>> GetPosttag(Guid id)
-        {
-            var posttag = await _context.Posttags.FindAsync(id);
-
-            if (posttag == null)
-            {
-                return NotFound();
-            }
-
-            return posttag;
-        }
-
-        // PUT: api/Posttags/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPosttag(Guid id, Posttag posttag)
-        {
-            if (id != posttag.PostId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(posttag).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PosttagExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
+        
         // POST: api/Posttags
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Posttag>> PostPosttag(Posttag posttag)
+        public async Task<ActionResult<PosttagDto>> PostPosttag(PosttagDto posttagDto)
         {
-            _context.Posttags.Add(posttag);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PosttagExists(posttag.PostId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var posttag = mapper.Map<Posttag>(posttagDto);
 
-            return CreatedAtAction("GetPosttag", new { id = posttag.PostId }, posttag);
+            posttag = await posttagRepository.CreateAsync(posttag);
+
+            var posttagDtoCreate = mapper.Map<PosttagDto>(posttag);
+            
+            return CreatedAtAction("GetPosttag", new { id = posttagDtoCreate.PostId }, posttagDtoCreate);
         }
 
-        // DELETE: api/Posttags/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePosttag(Guid id)
-        {
-            var posttag = await _context.Posttags.FindAsync(id);
-            if (posttag == null)
-            {
-                return NotFound();
-            }
-
-            _context.Posttags.Remove(posttag);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool PosttagExists(Guid id)
-        {
-            return _context.Posttags.Any(e => e.PostId == id);
-        }
+        
     }
 }
