@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NZWalk.API.Repositories;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.CustomIdentityValidator;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
@@ -16,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -48,7 +52,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<StackOverflowDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectstring")));
-builder.Services.AddDbContext<StackOverflowAuthDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbAuthConnectstring")));
 builder.Services.AddScoped<IAnswerRepository, SQLAnswerRepository>();
 builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
 builder.Services.AddScoped<IUserRoleRepository, SQLUserRoleRepository>();
@@ -58,6 +61,7 @@ builder.Services.AddScoped<IRoleRepository, SQLRoleRepository>();
 builder.Services.AddScoped<ITagRepository, SQLTagRepository>();
 builder.Services.AddScoped<IWatchedTagRepository, SQLWatchedTagRepository>();
 builder.Services.AddScoped<IIgnoreTagRepository, SQLIgnoredTagRepository>();
+builder.Services.AddScoped<IImageRepositiory, LocalImageRepositiory>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPosttagRepository, SQLPosttagRepository>();
 builder.Services.AddScoped(typeof(IStackOverflowRepository<>),typeof(StackOverflowRepository<>));
@@ -80,15 +84,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     }
  );
 
-builder.Services.AddIdentityCore<IdentityUser>(options =>
-{
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
-})
-    .AddRoles<IdentityRole>()
-    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("StackOverflow")
-    .AddEntityFrameworkStores<StackOverflowAuthDBContext>()
-    .AddUserValidator<CustomUserValidator>()
-    .AddDefaultTokenProviders();
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -121,6 +116,12 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    RequestPath = "/Images"
+});
 
 app.UseAuthorization();
 

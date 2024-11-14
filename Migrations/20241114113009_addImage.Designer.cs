@@ -9,11 +9,11 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 
 #nullable disable
 
-namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 {
     [DbContext(typeof(StackOverflowDBContext))]
-    [Migration("20241112083514_InsertIgnoreAndWatched")]
-    partial class InsertIgnoreAndWatched
+    [Migration("20241114113009_addImage")]
+    partial class addImage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,7 +107,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                     b.ToTable("comments", (string)null);
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoreTag", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoredTag", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -115,14 +115,40 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                     b.Property<Guid>("TagId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("IgnoredAt")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("UserId", "TagId");
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("IgnoreTags");
+                    b.ToTable("IgnoredTags");
+                });
+
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileSizeInBytes")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Post", b =>
@@ -131,14 +157,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("body");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("DetailProblem")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("detailproblem");
 
                     b.Property<int>("Downvote")
                         .HasColumnType("int")
@@ -149,6 +175,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)")
                         .HasColumnName("title");
+
+                    b.Property<string>("TryAndExpecting")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("tryandexpecting");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime")
@@ -278,6 +309,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                         .HasColumnType("datetime")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Gravatar")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -343,9 +378,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                     b.Property<Guid>("TagId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("WatchedAt")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("UserId", "TagId");
 
                     b.HasIndex("TagId");
@@ -387,10 +419,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoreTag", b =>
+            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.IgnoredTag", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
-                        .WithMany("IgnoredByUsers")
+                        .WithMany("IgnoredTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -457,7 +489,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.WatchedTag", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
-                        .WithMany("WatchedByUsers")
+                        .WithMany("WatchedTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -489,11 +521,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations.StackOverflowDB
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", b =>
                 {
-                    b.Navigation("IgnoredByUsers");
+                    b.Navigation("IgnoredTags");
 
                     b.Navigation("Posttags");
 
-                    b.Navigation("WatchedByUsers");
+                    b.Navigation("WatchedTags");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", b =>

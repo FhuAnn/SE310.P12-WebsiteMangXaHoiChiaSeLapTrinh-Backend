@@ -12,10 +12,10 @@ public partial class User
     public string Password { get; set; } = null!;
 
     public string Gravatar { get; set; } = "Default";
-    public string Email { get; set; } = null!;
 
     public int Views { get; set; }
 
+    public string Email { get; set; } = null!;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
