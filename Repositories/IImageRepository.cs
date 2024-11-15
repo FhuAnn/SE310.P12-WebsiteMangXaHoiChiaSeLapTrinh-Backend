@@ -5,7 +5,7 @@ using System;
 
 namespace NZWalk.API.Repositories
 {
-    public interface IImageRepositiory
+    public interface IImageRepository
     {
         Task<Image> Upload(Image images);
     }

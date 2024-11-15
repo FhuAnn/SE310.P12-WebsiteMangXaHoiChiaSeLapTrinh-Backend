@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
@@ -16,21 +18,27 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
     public class TagsController : ControllerBase
     {
         private readonly ITagRepository tagRepository;
+        private readonly IMapper mapper;
         private readonly IWatchedTagRepository watchedTagRepository;
         private readonly IIgnoreTagRepository ignoreTagRepository;
 
-        public TagsController(ITagRepository tagRepository, IWatchedTagRepository watchedTagRepository, IIgnoreTagRepository ignoreTagRepository)
+        public TagsController(ITagRepository tagRepository, IMapper mapper, IWatchedTagRepository watchedTagRepository, IIgnoreTagRepository ignoreTagRepository)
         {
             this.tagRepository = tagRepository;
+            this.mapper = mapper;
             this.watchedTagRepository = watchedTagRepository;
             this.ignoreTagRepository = ignoreTagRepository;
         }
 
         // GET: api/Tags
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tag>>> GetTags()
+        public async Task<ActionResult> GetTags()
         {
-            return await tagRepository.GetAllAsync();
+            //Get Data from Database - Domain models
+            var tagDomain = await tagRepository.GetAllAsync();
+
+            //Convert Domain to Dto
+            return Ok(mapper.Map<List<TagDto>>(tagDomain));
         }
 
         // GET: api/Tags/5
