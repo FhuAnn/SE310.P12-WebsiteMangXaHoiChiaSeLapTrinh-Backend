@@ -11,12 +11,12 @@ namespace NZWalk.API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        public ImagesController(IImageRepositiory imageRepositiory)
+        public ImagesController(IImageRepository imageRepositiory)
         {
             ImageRepositiory = imageRepositiory;
         }
 
-        public IImageRepositiory ImageRepositiory { get; }
+        public IImageRepository ImageRepositiory { get; }
 
         //Post: api/Images/Upload
         [HttpPost]
