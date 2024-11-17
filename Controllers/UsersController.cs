@@ -37,7 +37,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             //Get Data from Database - Domain models
-            var userDomain = await userRepository.GetAllAsync();
+            var userDomain = await userRepository.GetAllUserAsync();
             //Convert Domain to Dto
             return Ok(mapper.Map<List<UserDto>>(userDomain));
         }
@@ -46,13 +46,13 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(Guid id)
         {
-            var user = await userRepository.GetByIdAsync(u => u.Id==id);
+            var user = await userRepository.GetUserByIdAsync(id);
 
             if (user == null)
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<UserDto>(user));
+            return Ok(mapper.Map<List<UserDto>>(user));
         }
 
         // PUT: api/Users/5

@@ -2,6 +2,7 @@
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using System.Linq.Expressions;
+using System.Linq;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
@@ -32,10 +33,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             await dbContext.SaveChangesAsync();
             return existingRecord;
         }
-        public async Task<List<T>> GetAllAsync()
-        {
-            return await _dbSet.ToListAsync();
-        }
+            public async Task<List<T>> GetAllAsync()
+            {
+                return await _dbSet.ToListAsync();
+            }
         public async Task<T> GetByIdAsync(Expression<Func<T, bool>> filter)
         {
             return await _dbSet.FirstOrDefaultAsync(filter);
