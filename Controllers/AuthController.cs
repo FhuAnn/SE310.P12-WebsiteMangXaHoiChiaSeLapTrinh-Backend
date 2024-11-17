@@ -31,7 +31,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         {
             var user = new User
             {
-                //Email = registerRequestDto.Email,
+                Email = registerRequestDto.Email,
                 Username = registerRequestDto.Username,
                 Password = registerRequestDto.Password
             };
@@ -75,7 +75,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                 if (role != null)
                 {
                     // create token
-
                     var jwttoken = tokenService.CreateJWTToken(user, role.ToList());
 
                     var loginResponse = new LoginResponseDto
@@ -85,9 +84,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                     };
                     return Ok(loginResponse);
                 }
-
-
-
 
             }
 

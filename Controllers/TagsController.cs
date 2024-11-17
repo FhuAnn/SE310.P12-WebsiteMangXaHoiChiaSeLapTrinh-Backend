@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
@@ -35,15 +36,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult> GetTags()
         {
             //Get Data from Database - Domain models
-            var tagDomain = await tagRepository.GetAllAsync();
-
+            var tagDomain = await tagRepository.GetTagsAsync();
             //Convert Domain to Dto
             return Ok(mapper.Map<List<TagDto>>(tagDomain));
         }
 
         // GET: api/Tags/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tag>> GetTag(Guid id)
+        public async Task<ActionResult<Tag>> GetTagById(Guid id)
         {
             var tag = await tagRepository.GetByIdAsync(t => t.Id == id);
 

@@ -5,6 +5,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
     public interface IUserRepository : IStackOverflowRepository<User>
     {
         Task<User> Authenticate(string email,string password);
-
+        Task<List<User>> GetAllUserAsync();
+        Task<List<User>> GetUserByIdAsync(Guid id);
     }
 }

@@ -57,7 +57,20 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Return DTO back to client
             return Ok(mapper.Map<AnswerDto>(answerDomain));
         }
+        [HttpGet("answerByUserId")]
+        public async Task<ActionResult<Answer>> GetAnswerByUserId(Guid id)
+        {
+            //Get answer model from DB
+            var answerDomain = await answerRepository.GetAnswerByUserIdAsync(id);
 
+            if (answerDomain == null)
+            {
+                return NotFound();
+            }
+
+            //Return DTO back to client
+            return Ok(mapper.Map<List<AnswerDto>>(answerDomain));
+        }
         // POST: api/Answers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
