@@ -116,7 +116,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("IgnoredTags");
+                    b.ToTable("IgnoredTags", (string)null);
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Image", b =>
@@ -148,7 +148,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Post", b =>
@@ -382,7 +382,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("WatchedTags");
+                    b.ToTable("WatchedTags", (string)null);
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Answer", b =>

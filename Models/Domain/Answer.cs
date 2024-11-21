@@ -24,4 +24,5 @@ public partial class Answer
     public virtual Post? Post { get; set; }
 
     public virtual User? User { get; set; }
+    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

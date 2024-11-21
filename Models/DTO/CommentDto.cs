@@ -14,10 +14,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public Guid? UserId { get; set; }
 
-        public Guid? PostId { get; set; }
+        public Guid? EntityId { get; set; }
 
-        public virtual Post? Post { get; set; }
+        public int EntityType { get; set; }
+        
+        public virtual UserDto User { get; set; } 
 
-        public virtual User? User { get; set; }
     }
 }

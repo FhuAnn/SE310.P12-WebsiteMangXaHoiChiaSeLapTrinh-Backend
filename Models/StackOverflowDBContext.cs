@@ -93,6 +93,15 @@ public partial class StackOverflowDBContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Answers)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__answers__user_id__49C3F6B7");
+
+            // Thêm quan hệ với Comment
+            entity.HasMany(a => a.Comments)
+                .WithOne(c => c.Answer)
+                .HasForeignKey(c => c.EntityId) // Đảm bảo bạn có trường AnswerId trong Comment
+                .HasConstraintName("FK_answers_comments")
+                .HasAnnotation("EntityType", 2);
+
+
         });
 
         modelBuilder.Entity<Comment>(entity =>
@@ -109,15 +118,25 @@ public partial class StackOverflowDBContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
-            entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
-                .HasForeignKey(d => d.ParentId)
-                .HasConstraintName("FK_comments_Parent");
 
-            entity.HasOne(d => d.Post).WithMany(p => p.Comments)
-                .HasForeignKey(d => d.PostId)
-                .HasConstraintName("FK_comments_Post");
+            // Quan hệ với Post
+            entity.HasOne(d => d.Post)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(d => d.EntityId)
+                .HasConstraintName("FK_comments_Post")
+                .HasAnnotation("EntityType", 1);
 
-            entity.HasOne(d => d.User).WithMany(p => p.Comments)
+            // Quan hệ với Answer
+            entity.HasOne(d => d.Answer)
+                .WithMany(a => a.Comments) // Đảm bảo rằng Answer có thể có nhiều Comment
+                .HasForeignKey(d => d.EntityId) // Đảm bảo bạn có trường AnswerId trong Comment
+                .HasConstraintName("FK_comments_Answer")
+                .HasAnnotation("EntityType", 2);
+
+
+            // Quan hệ với User
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_comments_User");
         });
@@ -152,6 +171,18 @@ public partial class StackOverflowDBContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__posts__user_id__3F466844");
+
+            entity.HasMany(d => d.Comments)
+               .WithOne(c => c.Post)
+               .HasForeignKey(c => c.EntityId)
+               .HasConstraintName("FK__comments__post_id")
+                .HasAnnotation("EntityType", 1);
+
+            // Quan hệ với Answers
+            entity.HasMany(d => d.Answers)
+                .WithOne(a => a.Post)
+                .HasForeignKey(a => a.PostId)
+                .HasConstraintName("FK__answers__post_id");
         });
 
         modelBuilder.Entity<Posttag>(entity =>

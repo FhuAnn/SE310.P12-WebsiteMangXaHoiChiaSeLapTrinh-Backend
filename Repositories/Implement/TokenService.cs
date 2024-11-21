@@ -19,7 +19,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         {
             var claims = new List<Claim>();
 
-            claims.Add(new Claim(ClaimTypes.Email, user.Email));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()));
 
             foreach (var role in roles)
             {
