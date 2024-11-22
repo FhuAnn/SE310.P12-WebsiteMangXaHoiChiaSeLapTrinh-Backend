@@ -51,7 +51,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             return users;
         }
 
-        public async Task<List<User>> GetUserByIdAsync(Guid id)
+        public async Task<User> GetUserByIdAsync(Guid id)
         {
             var users = await context.Users
                 .Where(u => u.Id == id)
@@ -63,7 +63,28 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                     Views = u.Views,
                     CreatedAt = u.CreatedAt,
                     Email = u.Email,
-                }).ToListAsync();
+                    Posts = u.Posts,
+                    IgnoredTags = u.IgnoredTags.Select(it => new IgnoredTag {
+                        TagId = it.TagId,
+                        Tag = new Tag
+                        {
+                            Tagname = it.Tag.Tagname,
+                            Description = it.Tag.Description,
+                        },
+                    }).ToList(),
+                    Answers = u.Answers,
+                    Comments = u.Comments,
+                    WatchedTags = u.WatchedTags.Select(it => new WatchedTag
+                    {
+                        TagId = it.TagId,
+                        Tag = new Tag
+                        {
+                            Tagname = it.Tag.Tagname,
+                            Description = it.Tag.Description,
+                        },
+                    }).ToList(),
+                    UserRoles = u.UserRoles
+                }).SingleOrDefaultAsync();
             return users;
         }
     }

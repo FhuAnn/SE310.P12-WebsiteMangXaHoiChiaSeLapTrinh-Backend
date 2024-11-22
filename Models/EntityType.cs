@@ -2,7 +2,7 @@
 {
     public enum EntityType
     {
-        Post,
-        Answer
+        Post = 1,
+        Answer = 2,
     }
 }

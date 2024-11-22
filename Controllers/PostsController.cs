@@ -47,19 +47,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         }
 
         // GET: api/Posts
+    
+
         [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-
-            //Get Data from Database - Domain models
-            var postDomain = await postRepository.GetAllAsync();
-
-            //Convert Domain to Dto
-            return Ok(mapper.Map<List<PostDto>>(postDomain));
-        }
-
-        [HttpGet("postshome")]
- 
         public async Task<IActionResult> GetPostsHome()
         {
             //Get Data from Database - Domain models

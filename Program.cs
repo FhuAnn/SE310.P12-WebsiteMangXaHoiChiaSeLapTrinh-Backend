@@ -11,6 +11,8 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services.Implement;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -72,6 +74,7 @@ builder.Services.AddScoped<IIgnoreTagRepository, SQLIgnoredTagRepository>();
 builder.Services.AddScoped<IImageRepository, LocalImageRepositiory>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPosttagRepository, SQLPosttagRepository>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped(typeof(IStackOverflowRepository<>),typeof(StackOverflowRepository<>));
 builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 

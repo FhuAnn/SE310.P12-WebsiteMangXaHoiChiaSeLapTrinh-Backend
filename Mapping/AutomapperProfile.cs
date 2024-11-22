@@ -13,6 +13,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping
             CreateMap<Answer,AnswerDto>().ReverseMap();
             CreateMap<Answer, AddAnswerRequestDto>().ReverseMap();
             CreateMap<Answer, UpdateAnswerRequestDto>().ReverseMap();
+            CreateMap<Answer, HomeAnswerDto>().ReverseMap();
             CreateMap<Post, PostDto>().ReverseMap();
             CreateMap<Post, HomePostDto>().ReverseMap();
             CreateMap<Post, AddPostRequestDto>().ReverseMap();
@@ -27,9 +28,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping
             CreateMap<Posttag,HomePostTagDto>().ReverseMap();
             CreateMap<Tag, TagDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, HomeUserDto>().ReverseMap();
             CreateMap<Posttag, PosttagDto>().ReverseMap();
             CreateMap<Image, ImageDto>().ReverseMap();
-
+            CreateMap<UserRole, UserRoleDto>().ReverseMap();
+            
         }
     }
 }

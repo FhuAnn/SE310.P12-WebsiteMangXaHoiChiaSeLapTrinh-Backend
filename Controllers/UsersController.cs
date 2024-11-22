@@ -52,7 +52,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<List<UserDto>>(user));
+            return Ok(mapper.Map<UserDto>(user));
         }
 
         // PUT: api/Users/5
