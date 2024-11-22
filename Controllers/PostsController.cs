@@ -145,7 +145,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             postDomain = await postRepository.UpdateAsync(x => x.Id == id, entity =>
             {
                 entity.Detailproblem = postDomain.Detailproblem;
-                entity.Id = postDomain.Id;
+                entity.Title = postDomain.Title;
+                entity.Tryandexpecting = postDomain.Tryandexpecting;
+                entity.UpdatedAt = DateTime.Now;
             });
             if (postDomain == null) { return NotFound(); }
 
