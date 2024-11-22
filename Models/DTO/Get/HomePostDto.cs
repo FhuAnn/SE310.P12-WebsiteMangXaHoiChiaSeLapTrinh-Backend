@@ -21,6 +21,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get
         public Guid? UserId { get; set; }
         public int Upvote { get; set; }
         public int Downvote { get; set; }
+        public virtual HomeUserDto User { get; set; } = null!;
         public virtual ICollection<HomePostTagDto> Posttags { get; set; } = new List<HomePostTagDto>();
+        public virtual ICollection<HomeAnswerDto> Answers { get; set; } = new List<HomeAnswerDto>();
     }
 }

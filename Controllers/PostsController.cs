@@ -50,7 +50,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
     
 
         [HttpGet]
- 
         public async Task<IActionResult> GetPostsHome()
         {
             //Get Data from Database - Domain models

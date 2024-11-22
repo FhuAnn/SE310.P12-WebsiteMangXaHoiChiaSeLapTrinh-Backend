@@ -19,7 +19,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
         public int Upvote { get; set; }
         public int Downvote { get; set; }
 
-        public virtual Post? Post { get; set; }
+        //public virtual Post? Post { get; set; }
 
     }
 }

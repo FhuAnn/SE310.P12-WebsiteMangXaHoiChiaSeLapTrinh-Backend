@@ -17,8 +17,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
         public Guid? EntityId { get; set; }
 
         public int EntityType { get; set; }
-        
-        public virtual UserDto User { get; set; } 
+
+        //public virtual UserDto User { get; set; }
 
     }
 }

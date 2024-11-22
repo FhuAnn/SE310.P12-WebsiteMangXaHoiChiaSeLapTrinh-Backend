@@ -27,6 +27,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public virtual ICollection<PosttagDto> Posttags { get; set; } = new List<PosttagDto>();
 
-        public virtual UserDto? User { get; set; }
+        //public virtual UserDto? User { get; set; }
     }
 }

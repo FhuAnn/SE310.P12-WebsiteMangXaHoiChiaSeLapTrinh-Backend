@@ -3,5 +3,8 @@
     public class UserRoleDto
     {
 
+        public Guid RoleId { get; set; }
+
+        public DateTime AssignedAt { get; set; } = DateTime.Now;
     }
 }
