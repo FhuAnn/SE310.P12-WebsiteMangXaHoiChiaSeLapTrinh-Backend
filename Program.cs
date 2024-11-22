@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using NZWalk.API.Repositories;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.CustomIdentityValidator;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping;
@@ -13,13 +14,20 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services.Implement;
 using System.Text;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+/*builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Cấu hình JsonSerializerOptions để bỏ qua các trường null và các danh sách rỗng
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+    });*/
 builder.Services.AddHttpContextAccessor();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/
@@ -63,7 +71,7 @@ builder.Services.AddScoped<IRoleRepository, SQLRoleRepository>();
 builder.Services.AddScoped<ITagRepository, SQLTagRepository>();
 builder.Services.AddScoped<IWatchedTagRepository, SQLWatchedTagRepository>();
 builder.Services.AddScoped<IIgnoreTagRepository, SQLIgnoredTagRepository>();
-builder.Services.AddScoped<IImageRepositiory, LocalImageRepositiory>();
+builder.Services.AddScoped<IImageRepository, LocalImageRepositiory>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPosttagRepository, SQLPosttagRepository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
@@ -86,7 +94,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     }
  );
-
 
 
 builder.Services.Configure<IdentityOptions>(options =>

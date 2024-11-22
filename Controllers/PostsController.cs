@@ -30,11 +30,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         private readonly IPostRepository postRepository;
         private readonly IMapper mapper;
         private readonly IPosttagRepository posttagRepository;
-        private readonly IImageRepositiory imageRepository;
+        private readonly IImageRepository imageRepository;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public PostsController(IPostRepository postRepository, IMapper mapper, IPosttagRepository posttagRepository, IImageRepositiory imageRepositiory,
+        public PostsController(IPostRepository postRepository, IMapper mapper, IPosttagRepository posttagRepository, IImageRepository imageRepositiory,
             IWebHostEnvironment webHostEnvironment,IHttpContextAccessor httpContextAccessor)
         {
             this.postRepository = postRepository;
@@ -52,14 +52,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
  
         public async Task<IActionResult> GetPostsHome()
         {
-
-
             //Get Data from Database - Domain models
             var postDomain = await postRepository.GetPostHomesAsync();
    
-            /*var tagList = await*/
-
-
             //Convert Domain to Dto
             return Ok(mapper.Map<List<PostDto>>(postDomain));
         }
@@ -69,7 +64,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult<Post>> GetById(Guid id)
         {
             //Get answer model from DB
-            var postDomain = await postRepository.GetByIdAsync(x => x.Id == id);
+            var postDomain = await postRepository.GetPostByPostIdAsync(id);
 
             if (postDomain == null)
             {
@@ -78,6 +73,21 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
             //Return DTO back to client
             return Ok(mapper.Map<PostDto>(postDomain));
+        }
+
+        [HttpGet("getbytagid")]
+        public async Task<ActionResult<Post>> GetPostsByTagId(Guid id)
+        {
+            //Get answer model from DB
+            var postDomain = await postRepository.GetByTagIdAsync(id);
+
+            if (postDomain == null)
+            {
+                return NotFound();
+            }
+
+            //Return DTO back to client
+            return Ok(mapper.Map<List<PostDto>>(postDomain));
         }
         // POST: api/Posts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -191,9 +201,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                         postId=postId
                         //FilePath = await SaveImageToLocal(file)
                     };
-                    if (image.postId == null && image.postId == null)
+                    if (image.postId == null)
                     {
-                        return BadRequest("Ảnh phải liên kết với ít nhất một Post hoặc User.");
+                        return BadRequest("Ảnh phải liên kết với một Post ");
                     }
                     // Lưu ảnh vào cơ sở dữ liệu
                     image = await imageRepository.Upload( image);

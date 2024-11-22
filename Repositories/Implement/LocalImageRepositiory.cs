@@ -6,7 +6,7 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
 namespace NZWalk.API.Repositories
 {
-    public class LocalImageRepositiory : IImageRepositiory
+    public class LocalImageRepositiory : IImageRepository
     {
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -22,15 +22,17 @@ namespace NZWalk.API.Repositories
         }
         public async Task<Image> Upload(Image image)
         {
-           
-            var localFilePath = Path.Combine(webHostEnvironment.ContentRootPath,"Images", 
-                $"{image.file.FileName}");
+            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            var uniqueFileName = $"{Path.GetFileNameWithoutExtension(image.file.FileName)}_{timestamp}{Path.GetExtension(image.file.FileName)}";
+            var localFilePath = Path.Combine(webHostEnvironment.ContentRootPath,"Images",
+                uniqueFileName);
            //Upload Image to LocalPath 
             using var stream = new FileStream(localFilePath,FileMode.Create);
             await image.file.CopyToAsync(stream);
 
             //E;/https://localjhost
-            var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/Images/{image.file.FileName}";
+            var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}" +
+                $"/Images/{uniqueFileName}";
             image.filePath = urlFilePath;
             
             //Add Image to the Images table

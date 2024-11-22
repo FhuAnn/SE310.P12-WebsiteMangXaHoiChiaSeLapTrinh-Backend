@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 

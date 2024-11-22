@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
@@ -16,8 +18,9 @@ public partial class Answer
     public Guid? UserId { get; set; }
 
     public Guid? PostId { get; set; }
-
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public int Upvote { get; set; }
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
 
     public int Downvote { get; set; }
 
