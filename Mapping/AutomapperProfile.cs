@@ -2,6 +2,7 @@
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update;
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping
 {
@@ -13,6 +14,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping
             CreateMap<Answer, AddAnswerRequestDto>().ReverseMap();
             CreateMap<Answer, UpdateAnswerRequestDto>().ReverseMap();
             CreateMap<Post, PostDto>().ReverseMap();
+            CreateMap<Post, HomePostDto>().ReverseMap();
             CreateMap<Post, AddPostRequestDto>().ReverseMap();
             CreateMap<Post, UpdatePostRequestDto>().ReverseMap();
             CreateMap<Comment, CommentDto>().ReverseMap();
@@ -22,10 +24,12 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping
             CreateMap<Role, AddRoleRequestDto>().ReverseMap();
             CreateMap<Role, UpdateRoleRequestDto>().ReverseMap();
             CreateMap<Posttag, PosttagDto>().ReverseMap();
+            CreateMap<Posttag,HomePostTagDto>().ReverseMap();
             CreateMap<Tag, TagDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<Posttag, PosttagDto>().ReverseMap();
             CreateMap<Image, ImageDto>().ReverseMap();
+
         }
     }
 }
