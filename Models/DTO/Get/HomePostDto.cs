@@ -1,6 +1,6 @@
 ﻿using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
-namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get
 {
     public class HomePostDto
     {
@@ -8,7 +8,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public string Title { get; set; } = null!;
 
-        public string Body { get; set; } = null!;
+        public string DetailProblem { get; set; } = null!;
+
+        public string TryAndExpecting { get; set; } = null!;
 
         public int Views { get; set; }
 
@@ -16,11 +18,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public DateTime UpdatedAt { get; set; }
 
-        public string Username { get; set; } = null!;
+        public Guid? UserId { get; set; }
         public int Upvote { get; set; }
-
         public int Downvote { get; set; }
-        public IEnumerable<string> TagList { get; set; }
-
+        public virtual ICollection<HomePostTagDto> Posttags { get; set; } = new List<HomePostTagDto>();
     }
 }

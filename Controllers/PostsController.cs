@@ -18,6 +18,7 @@ using NZWalk.API.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using NZWalk.API.Models.DTO;
 using Azure.Core;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
@@ -56,7 +57,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var postDomain = await postRepository.GetPostHomesAsync();
    
             //Convert Domain to Dto
-            return Ok(mapper.Map<List<PostDto>>(postDomain));
+            return Ok(mapper.Map<List<HomePostDto>>(postDomain));
         }
 
         // GET: api/Posts/5
