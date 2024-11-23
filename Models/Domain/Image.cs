@@ -2,7 +2,7 @@
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain
 {
-    public class    Image
+    public class Image
     {
         public Guid id { get; set; }
         [NotMapped]

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
+using System.Formats.Asn1;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
@@ -19,13 +20,57 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         public async Task<Post> GetPostDetailsAsync(Guid id)
         {
             var post = await dbContext.Posts
-               .Include(p => p.User) // Bao gồm thông tin người dùng
-               .Include(p => p.Answers) // Bao gồm các câu trả lời
-               .Include(p => p.Comments) // Bao gồm các bình luận
-               .Include(p => p.Posttags)
-               .Include(p=>p.Images)
-               .FirstOrDefaultAsync(p => p.Id == id); // Lọc theo ID bài viết
-
+               .Where(p => p.Id == id)
+               .Select(p => new Post
+               {
+                   Id = p.Id,
+                   Title = p.Title,
+                   Tryandexpecting = p.Tryandexpecting,
+                   Views = p.Views,
+                   CreatedAt = p.CreatedAt,
+                   UpdatedAt = p.UpdatedAt,
+                   UserId = p.UserId,
+                   Upvote = p.Upvote,
+                   Downvote = p.Downvote,
+                   Detailproblem = p.Detailproblem,
+                   Answers = p.Answers.Select(ans=>new Answer
+                   {
+                       Id = ans.Id,
+                       Body = ans.Body,
+                       CreatedAt = ans.CreatedAt,
+                       UpdatedAt = ans.UpdatedAt,
+                       UserId = ans.UserId,
+                       PostId = ans.PostId,
+                       Upvote = ans.Upvote,
+                       Downvote = ans.Downvote,
+                       Comments = ans.Comments.Select(cmt=>new Comment
+                       {
+                           Id = cmt.Id,
+                           Body =cmt.Body,
+                           CreatedAt=cmt.CreatedAt,
+                           UpdatedAt = cmt.UpdatedAt,
+                           EntityType = cmt.EntityType,
+                           EntityId = cmt.EntityId,
+                       }).ToList()
+                   }).ToList(),
+                   Images = p.Images.Select(img=> new Image
+                   {
+                       id = img.id,
+                       filePath = img.filePath,
+                       postId = img.postId,
+                   }).ToList(),
+                   Posttags = p.Posttags.Select(pt=> new Posttag
+                   {
+                       TagId = pt.TagId,
+                       Tag = new Tag { Tagname = pt.Tag.Tagname }
+                   }).ToList(),
+                   User= new User
+                   {
+                       Username = p.User.Username,
+                       Gravatar = p.User.Gravatar
+                   }
+               }).SingleOrDefaultAsync();
+             
             return post;
         }
 
@@ -98,9 +143,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             return posts;
         }
 
-        public async Task<List<Post>> GetPostByPostIdAsync(Guid id)
+        public async Task<Post> GetPostByPostIdAsync(Guid id)
         {
-            var posts = await dbContext.Posts
+            var post = await dbContext.Posts
                 .Where(p => p.Id==id)
                 .Select(p => new Post
                 {
@@ -122,9 +167,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                         TagId = pt.TagId,
                         Tag = pt.Tag
                     }).ToList()
-                }).ToListAsync();
-
-            return posts;
+                }).SingleOrDefaultAsync();
+            return post;
         }
     }
 }

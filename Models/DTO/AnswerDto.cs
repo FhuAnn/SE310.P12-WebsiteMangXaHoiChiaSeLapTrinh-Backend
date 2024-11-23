@@ -9,7 +9,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public string Body { get; set; } = null!;
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } 
 
         public DateTime UpdatedAt { get; set; }
 
@@ -18,6 +18,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
         public Guid? PostId { get; set; }
         public int Upvote { get; set; }
         public int Downvote { get; set; }
+        public ICollection<CommentDto> Comments { get; set; } = new List<CommentDto>();
 
         //public virtual Post? Post { get; set; }
 

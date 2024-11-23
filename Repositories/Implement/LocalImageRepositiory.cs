@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NZWalk.API.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
@@ -20,6 +21,24 @@ namespace NZWalk.API.Repositories
             this.httpContextAccessor = httpContextAccessor;
             this.dbContext = dbContext;
         }
+
+        public async Task<List<string>> GetImageUrlsByPostId(Guid id)
+        {
+            var image = await dbContext.Images
+                .Where(img => img.postId == id)
+                .Select(img => new Image
+                {
+                    filePath = img.filePath,
+                }).ToListAsync();
+
+            var imgUrls = new List<string>();
+            foreach (var img in image)
+            {
+                imgUrls.Add(img.filePath);
+            }
+            return imgUrls;
+        }
+
         public async Task<Image> Upload(Image image)
         {
             var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
