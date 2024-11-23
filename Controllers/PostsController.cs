@@ -36,7 +36,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         private readonly IHttpContextAccessor httpContextAccessor;
 
         public PostsController(IPostRepository postRepository, IMapper mapper, IPosttagRepository posttagRepository, IImageRepository imageRepositiory,
-            IWebHostEnvironment webHostEnvironment,IHttpContextAccessor httpContextAccessor)
+            IWebHostEnvironment webHostEnvironment,IHttpContextAccessor httpContextAccessor, IImageRepository imageRepository)
         {
             this.postRepository = postRepository;
             this.mapper = mapper;
@@ -49,8 +49,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         // GET: api/Posts
     
 
-        [HttpGet]
-        public async Task<IActionResult> GetPostsHome()
+        [HttpGet("gethomepost")]
+        public async Task<ActionResult<List<Post>>> GetPostsHome()
         {
             //Get Data from Database - Domain models
             var postDomain = await postRepository.GetPostHomesAsync();
@@ -70,9 +70,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             {
                 return NotFound();
             }
-
             //Return DTO back to client
-            return Ok(mapper.Map<PostDto>(postDomain));
+            var postDto = mapper.Map<PostDto>(postDomain);
+            postDto.ImageUrls = await imageRepository.GetImageUrlsByPostId(id);
+            return Ok(postDto);
         }
 
         [HttpGet("getbytagid")]
@@ -87,20 +88,19 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             }
 
             //Return DTO back to client
-            return Ok(mapper.Map<List<PostDto>>(postDomain));
+            return Ok(mapper.Map<List<HomePostDto>>(postDomain));
         }
         // POST: api/Posts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("createPost")]
         [ValidateModel]
-        public async Task<ActionResult<Post>> CreatePost([FromBody] AddPostRequestDto addPostDto)
+        public async Task<ActionResult<Post>> CreatePost([FromForm] AddPostRequestDto addPostDto)
         {
             //Convert DTO to Domain Model
             var postDomain = mapper.Map<Post>(addPostDto);
 
             //Use Domain Model to create Post
             postDomain = await postRepository.CreateAsync(postDomain);
-           
 
             if( postDomain == null)
             {
@@ -118,21 +118,79 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
                 if (posttag == null) return BadRequest("Da xay ra loi, Khong tao post duoc");
             }
+            UploadImages(postDomain.Id, addPostDto.ImageFiles);
             //Convert Domain Model back to DTO
-            return Ok("tao post thanh cong");
+            return Ok(postDomain.Id);
+        }
+
+        [HttpPost("UploadImages/{postId}")]
+        public async Task<IActionResult> UploadImages(Guid postId, [FromForm] List<IFormFile> files)
+        {
+            var post = await postRepository.GetPostDetailsAsync(postId);
+            if (post == null)
+            {
+                return NotFound("Post not found.");
+            }
+            if (files.Count() == 0)
+            {
+                return BadRequest("File List is empty!");
+            }
+            var imageListDto = new List<ImageDto>();
+
+            foreach (var file in files)
+            {
+                ValidateFileUpload(file);
+                if (ModelState.IsValid)
+                {
+                    // Kiểm tra và xử lý ảnh
+                    var image = new Image
+                    {
+                        file = file,
+                        fileExtension = Path.GetExtension(file.FileName),
+                        fileSizeInBytes = file.Length,
+                        postId = postId,
+                        //FilePath = await SaveImageToLocal(file)
+                    };
+                    if (image.postId == null)
+                    {
+                        return BadRequest("Ảnh phải liên kết với một Post ");
+                    }
+                    // Lưu ảnh vào cơ sở dữ liệu
+                    image = await imageRepository.Upload(image);
+                    var imageDto = mapper.Map<ImageDto>(image);
+                    imageListDto.Add(imageDto);
+                    continue;
+                }
+                return BadRequest(ModelState);
+            }
+            return Ok(imageListDto);
+        }
+
+        private void ValidateFileUpload(IFormFile file)
+        {
+            var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
+            if (!allowedExtensions.Contains(Path.GetExtension(file.FileName)))
+            {
+                ModelState.AddModelError("file", "Unsupported file extension");
+
+                if (file.Length > 10485760)
+                {
+                    ModelState.AddModelError("file", "File size more than 10MB, please upload a smaller size file");
+                }
+            }
         }
 
         // PUT: api/Posts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> UpdatePost(Guid id, UpdatePostRequestDto updatePostRequestDto)
+        public async Task<IActionResult> UpdatePost(UpdatePostRequestDto updatePostRequestDto)
         {
             //Map DTO to Domain Model
             var postDomain = mapper.Map<Post>(updatePostRequestDto);
 
             //Check if region exits
-            postDomain = await postRepository.UpdateAsync(x => x.Id == id, entity =>
+            postDomain = await postRepository.UpdateAsync(x => x.Id == postDomain.Id, entity =>
             {
                 entity.Detailproblem = postDomain.Detailproblem;
                 entity.Title = postDomain.Title;
@@ -163,7 +221,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult> GetPostDetails(Guid postId)
         {
             var postDomain = await postRepository.GetPostDetailsAsync(postId);
-
             if (postDomain == null)
             {
                 return NotFound();
@@ -171,64 +228,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
             // Chuyển đổi dữ liệu thành DTO
             var postDto = mapper.Map<PostDto>(postDomain);
-
+            postDto.ImageUrls = await imageRepository.GetImageUrlsByPostId(postId);
             return Ok(postDto);
-        }
-
-        [HttpPost("UploadImages/{postId}")]
-        public async Task<IActionResult> UploadImages(Guid postId, [FromForm] List<IFormFile> files)
-        {
-            var post = await postRepository.GetPostById(postId);
-            if (post == null)
-            {
-                return NotFound("Post not found.");
-            }
-            if (files.Count()==0)
-            {
-                return BadRequest("File List is empty!");
-            }
-            var imageListDto = new List<ImageDto>();
-
-            foreach (var file in files)
-            {
-                ValidateFileUpload(file);
-                if (ModelState.IsValid)
-                {
-                    // Kiểm tra và xử lý ảnh
-                    var image = new Image
-                    {
-                        file = file,
-                        fileExtension = Path.GetExtension(file.FileName),
-                        fileSizeInBytes = file.Length,
-                        postId=postId
-                        //FilePath = await SaveImageToLocal(file)
-                    };
-                    if (image.postId == null)
-                    {
-                        return BadRequest("Ảnh phải liên kết với một Post ");
-                    }
-                    // Lưu ảnh vào cơ sở dữ liệu
-                    image = await imageRepository.Upload( image);
-                    var imageDto = mapper.Map<ImageDto>(image);
-                    imageListDto.Add(imageDto);
-                    continue;
-                }
-                return BadRequest(ModelState);
-            }
-            return Ok(imageListDto);
-        }
-        private void ValidateFileUpload(IFormFile file)
-        {
-            var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png" };
-            if (!allowedExtensions.Contains(Path.GetExtension(file.FileName)))
-            {
-                ModelState.AddModelError("file", "Unsupported file extension");
-
-                if (file.Length > 10485760)
-                {
-                    ModelState.AddModelError("file", "File size more than 10MB, please upload a smaller size file");
-                }
-            }
         }
     }
 }

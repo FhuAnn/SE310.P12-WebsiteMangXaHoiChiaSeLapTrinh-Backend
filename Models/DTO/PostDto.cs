@@ -18,7 +18,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
-
         public Guid? UserId { get; set; }
         public int Upvote { get; set; }
         public int Downvote { get; set; }
@@ -27,6 +26,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public virtual ICollection<PosttagDto> Posttags { get; set; } = new List<PosttagDto>();
 
-        //public virtual UserDto? User { get; set; }
+        public virtual UserDto? User { get; set; }
+        public List<string>? ImageUrls { get; set; } = new List<string>();
+
     }
 }

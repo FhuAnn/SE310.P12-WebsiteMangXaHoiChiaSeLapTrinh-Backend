@@ -8,5 +8,7 @@ namespace NZWalk.API.Repositories
     public interface IImageRepository
     {
         Task<Image> Upload(Image images);
+        Task<List<string>> GetImageUrlsByPostId(Guid id);
     }
 }
+    

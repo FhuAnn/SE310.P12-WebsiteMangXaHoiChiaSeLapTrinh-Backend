@@ -11,13 +11,13 @@ namespace NZWalk.API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
+        private readonly IImageRepository imageRepositiory;
+
         public ImagesController(IImageRepository imageRepositiory)
         {
-            ImageRepositiory = imageRepositiory;
+            this.imageRepositiory = imageRepositiory;
         }
-
-        public IImageRepository ImageRepositiory { get; }
-
+       
         //Post: api/Images/Upload
         [HttpPost]
         [Route("Upload/{postId}")]
@@ -35,7 +35,7 @@ namespace NZWalk.API.Controllers
                 };
 
                 //user repository to upload image
-                await ImageRepositiory.Upload(imageDomainModel);
+                await imageRepositiory.Upload(imageDomainModel);
                 return Ok(imageDomainModel);
             }
             return BadRequest(ModelState);

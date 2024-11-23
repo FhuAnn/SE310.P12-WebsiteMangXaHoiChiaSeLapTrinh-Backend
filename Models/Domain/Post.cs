@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
@@ -34,4 +35,5 @@ public partial class Post
     public virtual ICollection<Posttag> Posttags { get; set; } = new List<Posttag>();
 
     public virtual User? User { get; set; }
+
 }
