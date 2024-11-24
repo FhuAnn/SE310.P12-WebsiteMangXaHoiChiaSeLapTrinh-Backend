@@ -15,4 +15,5 @@ public partial class Posttag
     public Guid TagId { get; set; }
     public virtual Post Post { get; set; } = null!;
     public virtual Tag Tag { get; set; } = null!;
+    
 }

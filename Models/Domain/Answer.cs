@@ -18,10 +18,7 @@ public partial class Answer
     public Guid? UserId { get; set; }
 
     public Guid? PostId { get; set; }
-    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public int Upvote { get; set; }
-    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-
     public int Downvote { get; set; }
 
     public virtual Post? Post { get; set; }

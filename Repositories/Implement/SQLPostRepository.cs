@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using NZWalk.API.Repositories;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using System.Formats.Asn1;
@@ -11,10 +12,12 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
     public class SQLPostRepository : StackOverflowRepository<Post>,IPostRepository
     {
         private readonly StackOverflowDBContext dbContext;
+        private readonly IImageRepository imageRepository;
 
-        public SQLPostRepository(StackOverflowDBContext dbContext):base(dbContext) 
+        public SQLPostRepository(StackOverflowDBContext dbContext,IImageRepository imageRepository):base(dbContext) 
         {
             this.dbContext = dbContext;
+            this.imageRepository = imageRepository;
         }
 
         public async Task<Post> GetPostDetailsAsync(Guid id)
@@ -169,6 +172,39 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                     }).ToList()
                 }).SingleOrDefaultAsync();
             return post;
+        }
+
+        public async Task<List<Post>> GetByUserIdAsync(Guid id)
+        {
+            var posts = await dbContext.Posts
+                .Where(p => p.UserId == id)
+                .Select(p => new Post
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Tryandexpecting = p.Tryandexpecting,
+                    Views = p.Views,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt,
+                    UserId = p.UserId,
+                    Upvote = p.Upvote,
+                    Downvote = p.Downvote,
+                    Detailproblem = p.Detailproblem,
+                    Answers = p.Answers,
+                    User = p.User,
+                    Posttags = p.Posttags.Select(pt => new Posttag
+                    {
+                        PostId = pt.PostId,
+                        TagId = pt.TagId,
+                        Tag = pt.Tag
+                    }).ToList(),
+                    ImageUrls = new List<string>()
+                }).ToListAsync();
+            foreach (var post in posts)
+            {
+                post.ImageUrls = await imageRepository.GetImageUrlsByPostId(post.Id);
+            }
+            return posts;
         }
     }
 }

@@ -90,6 +90,21 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Return DTO back to client
             return Ok(mapper.Map<List<HomePostDto>>(postDomain));
         }
+
+        [HttpGet("getbyuserid")]
+        public async Task<ActionResult<Post>> GetPostsByUserId(Guid id)
+        {
+            //Get answer model from DB
+            var postDomain = await postRepository.GetByUserIdAsync(id);
+
+            if (postDomain == null)
+            {
+                return NotFound();
+            }
+            var postDto = mapper.Map<List<PostDto>>(postDomain);
+            //Return DTO back to client
+            return Ok(postDto);
+        }
         // POST: api/Posts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("createPost")]
@@ -114,11 +129,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                 {
                     PostId = postDomain.Id,
                     TagId = item
-                });
+                }); 
 
                 if (posttag == null) return BadRequest("Da xay ra loi, Khong tao post duoc");
             }
-            UploadImages(postDomain.Id, addPostDto.ImageFiles);
+            await UploadImages(postDomain.Id, addPostDto.ImageFiles);
             //Convert Domain Model back to DTO
             return Ok(postDomain.Id);
         }
