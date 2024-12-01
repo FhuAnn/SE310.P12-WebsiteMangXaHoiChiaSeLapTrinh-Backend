@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
@@ -58,22 +60,24 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         // PUT: api/Tags/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTag(Guid id, Tag tag)
+        public async Task<IActionResult> PutTag(Guid id, UpdateTagRequestDto updateTagRequestDto)
         {
-             await tagRepository.UpdateAsync(t => t.Id == id, entity =>
+            var tagDomain = await tagRepository.UpdateAsync(t => t.Id == id, entity =>
             {
-                entity = tag;
+                entity.Tagname = updateTagRequestDto.Tagname;
+                entity.Description = updateTagRequestDto.Description;
+                entity.UpdatedAt = DateTime.Now;
             });
-
-            return NoContent();
+            return Ok(tagDomain);
         }
 
         // POST: api/Tags
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Tag>> PostTag(Tag tag)
+        public async Task<ActionResult<Tag>> PostTag(AddTagRequestDto addTagRequestDto)
         {
-            var tagCreate = await tagRepository.CreateAsync(tag);
+            var tagDomain = mapper.Map<Tag>(addTagRequestDto);
+            var tagCreate = await tagRepository.CreateAsync(tagDomain);
             
             return CreatedAtAction("GetTag", new { id = tagCreate.Id }, tagCreate);
         }

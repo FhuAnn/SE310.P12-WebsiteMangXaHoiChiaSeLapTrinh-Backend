@@ -6,15 +6,15 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
 public partial class Tag
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Tagname { get; set; } = null!;
 
     public string Description { get; set; } = null!;
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public virtual ICollection<Posttag> Posttags { get; set; } = new List<Posttag>();
 
