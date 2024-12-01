@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using NZWalk.API.Repositories;
@@ -192,6 +193,15 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                     Detailproblem = p.Detailproblem,
                     Answers = p.Answers,
                     User = p.User,
+                    Comments=p.Comments.Select(cmt=>new Comment
+                    {
+                        Id=cmt.Id ,
+                        Body= cmt.Body ,
+                        CreatedAt= cmt.CreatedAt ,
+                        UpdatedAt= cmt.UpdatedAt ,
+                        UserId= cmt.UserId ,
+                        User= cmt.User,
+                    }).ToList(),
                     Posttags = p.Posttags.Select(pt => new Posttag
                     {
                         PostId = pt.PostId,
@@ -204,6 +214,37 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             {
                 post.ImageUrls = await imageRepository.GetImageUrlsByPostId(post.Id);
             }
+            return posts;
+        }
+
+        public async Task<List<Post>> GetMostAnsweredQuestionAsync()
+        {
+            var oneWeekAgo = DateTime.Now.AddDays(-7);
+            var posts = await dbContext.Posts
+                .Where(p=>p.Answers.Any(ans=>ans.CreatedAt>= oneWeekAgo))
+                .OrderByDescending(p => p.Answers.Count(ans=>ans.CreatedAt>= oneWeekAgo))
+                .Take(3)
+                .Select(p => new Post
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Tryandexpecting = p.Tryandexpecting,
+                    Views = p.Views,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt,
+                    UserId = p.UserId,
+                    Upvote = p.Upvote,
+                    Downvote = p.Downvote,
+                    Detailproblem = p.Detailproblem,
+                    Answers = p.Answers,
+                    User = p.User,
+                    Posttags = p.Posttags.Select(pt => new Posttag
+                    {
+                        PostId = pt.PostId,
+                        TagId = pt.TagId,
+                        Tag = pt.Tag
+                    }).ToList()
+                }).ToListAsync();
             return posts;
         }
     }

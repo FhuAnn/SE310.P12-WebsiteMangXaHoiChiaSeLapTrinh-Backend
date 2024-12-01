@@ -23,6 +23,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
         public int Downvote { get; set; }
 
         public virtual ICollection<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
+        public virtual ICollection<CommentDto> Comments { get; set; } = new List<CommentDto>();
 
         public virtual ICollection<PosttagDto> Posttags { get; set; } = new List<PosttagDto>();
 

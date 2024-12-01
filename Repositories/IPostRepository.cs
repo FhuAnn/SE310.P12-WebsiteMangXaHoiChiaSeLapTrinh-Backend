@@ -11,5 +11,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
         Task<List<Post>> GetByTagIdAsync(Guid id);
         Task<List<Post>> GetByUserIdAsync(Guid id);
         Task<Post> GetPostByPostIdAsync(Guid id);
+        Task<List<Post>> GetMostAnsweredQuestionAsync();
     }
 }

@@ -246,5 +246,22 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             postDto.ImageUrls = await imageRepository.GetImageUrlsByPostId(postId);
             return Ok(postDto);
         }
+        
+        [HttpGet]
+        [Route("GetMostAnsweredQuestion")]
+        public async Task<ActionResult> GetMostAnsweredQuestion()
+        {
+            var postDomain = await postRepository.GetMostAnsweredQuestionAsync();
+            if (postDomain == null)
+            {
+                return NotFound();
+            }
+
+            // Chuyển đổi dữ liệu thành DTO
+            var postDtos = mapper.Map<List<TopPostsDto>>(postDomain);
+            return Ok(postDtos);
+        }
+
+
     }
 }

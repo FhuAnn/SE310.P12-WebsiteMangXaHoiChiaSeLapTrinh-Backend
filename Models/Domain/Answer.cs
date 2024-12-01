@@ -19,6 +19,7 @@ public partial class Answer
 
     public Guid? PostId { get; set; }
     public int Upvote { get; set; }
+
     public int Downvote { get; set; }
 
     public virtual Post? Post { get; set; }

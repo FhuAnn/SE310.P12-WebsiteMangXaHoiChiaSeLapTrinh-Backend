@@ -67,6 +67,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             {
                 entity.Username = updateCommentRequestDto.Username;
                 entity.Email = updateCommentRequestDto.Email;
+                entity.Gravatar = updateCommentRequestDto.Gravatar;
                 entity.UpdatedAt= DateTime.Now;
             });
             if (userDomain == null) { return NotFound(); }
@@ -77,13 +78,13 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        /*[HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             var userInsert = await userRepository.CreateAsync(user);
 
             return CreatedAtAction("GetUser", new { id = userInsert.Id }, userInsert);
-        }
+        }*/
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
