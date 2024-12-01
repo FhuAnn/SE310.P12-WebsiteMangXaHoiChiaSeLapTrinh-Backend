@@ -30,10 +30,11 @@ public partial class Post
     public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    [NotMapped]    
+    public List<string>? ImageUrls { get; set; } = new List<string>();
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
     public virtual ICollection<Posttag> Posttags { get; set; } = new List<Posttag>();
 
     public virtual User? User { get; set; }
-
 }

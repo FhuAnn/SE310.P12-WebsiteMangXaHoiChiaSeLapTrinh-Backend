@@ -4,6 +4,7 @@
     {
         public string Username { get; set; } = null!;
 
+        public string Gravatar { get; set; } = "default";
 
         public DateTime UpdatedAt { get; set; }
 

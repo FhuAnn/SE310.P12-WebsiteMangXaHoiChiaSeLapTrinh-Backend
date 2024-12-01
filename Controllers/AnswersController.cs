@@ -42,6 +42,17 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Convert Domain to Dto
             return Ok(mapper.Map<List<AnswerDto>>(answerDomain));
         }
+
+        // GET: api/Answers
+        [HttpGet("GetTheMostAnswer")]
+        public async Task<IActionResult> GetTheMostAnswer()
+        {
+            //Get Data from Database - Domain models
+            var answerDomain = await answerRepository.GetAllAsync();
+            //Convert Domain to Dto
+            return Ok(mapper.Map<List<AnswerDto>>(answerDomain));
+        }
+
         // GET: api/Answers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Answer>> GetById(Guid id)
