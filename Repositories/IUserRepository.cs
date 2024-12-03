@@ -7,5 +7,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
         Task<User> Authenticate(string email,string password);
         Task<List<User>> GetAllUserAsync();
         Task<User> GetUserByIdAsync(Guid id);
+        Task<User> GetUserByEmailAsync(string email);
     }
 }
