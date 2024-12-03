@@ -11,6 +11,7 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 
@@ -40,6 +41,20 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var userDomain = await userRepository.GetAllUserAsync();
             //Convert Domain to Dto
             return Ok(mapper.Map<List<UserDto>>(userDomain));
+        }
+
+        [HttpGet]
+        [Route("getUserByEmail")]
+        public async Task<ActionResult<User>> GetUserByEmail([FromQuery] string email)
+        {
+            //Get Data from Database - Domain models
+            var userDomain = await userRepository.GetUserByEmailAsync(email);
+            if (userDomain == null)
+            {
+                return NotFound();
+            }
+            //Convert Domain to Dto
+            return Ok(mapper.Map<AuthenUserDto>(userDomain));
         }
 
         // GET: api/Users/5
@@ -75,16 +90,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Convert Domain Model to DTO
             return Ok(mapper.Map<UserDto>(userDomain));
         }
-
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        /*[HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
-        {
-            var userInsert = await userRepository.CreateAsync(user);
-
-            return CreatedAtAction("GetUser", new { id = userInsert.Id }, userInsert);
-        }*/
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
@@ -140,6 +145,5 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                 }
             }
         }
-
     }
 }

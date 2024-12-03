@@ -51,6 +51,44 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             return users;
         }
 
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            var user = await context.Users
+                .Where(u => u.Email == email)
+                .Select(u => new User
+                {
+                    Id = u.Id,
+                    Username = u.Username,
+                    Gravatar = u.Gravatar,
+                    Views = u.Views,
+                    CreatedAt = u.CreatedAt,
+                    Email = u.Email,
+                    Posts = u.Posts.OrderByDescending(p=>p.CreatedAt).ToList(),
+                    IgnoredTags = u.IgnoredTags.Select(it => new IgnoredTag
+                    {
+                        TagId = it.TagId,
+                        Tag = new Tag
+                        {
+                            Tagname = it.Tag.Tagname,
+                            Description = it.Tag.Description,
+                        },
+                    }).ToList(),
+                    Answers = u.Answers.OrderByDescending(p => p.CreatedAt).ToList(),
+                    Comments = u.Comments.OrderByDescending(p => p.CreatedAt).ToList(),
+                    WatchedTags = u.WatchedTags.Select(it => new WatchedTag
+                    {
+                        TagId = it.TagId,
+                        Tag = new Tag
+                        {
+                            Tagname = it.Tag.Tagname,
+                            Description = it.Tag.Description,
+                        },
+                    }).ToList(),
+                    UserRoles = u.UserRoles
+                }).SingleOrDefaultAsync();
+            return user;
+        }
+
         public async Task<User> GetUserByIdAsync(Guid id)
         {
             var users = await context.Users
@@ -63,8 +101,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                     Views = u.Views,
                     CreatedAt = u.CreatedAt,
                     Email = u.Email,
-                    Posts = u.Posts,
-                    IgnoredTags = u.IgnoredTags.Select(it => new IgnoredTag {
+                    Posts = u.Posts.OrderByDescending(p => p.CreatedAt).ToList(),
+                    IgnoredTags = u.IgnoredTags.Select(it => new IgnoredTag
+                    {
                         TagId = it.TagId,
                         Tag = new Tag
                         {
@@ -72,8 +111,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                             Description = it.Tag.Description,
                         },
                     }).ToList(),
-                    Answers = u.Answers,
-                    Comments = u.Comments,
+                    Answers = u.Answers.OrderByDescending(p => p.CreatedAt).ToList(),
+                    Comments = u.Comments.OrderByDescending(p => p.CreatedAt).ToList(),
                     WatchedTags = u.WatchedTags.Select(it => new WatchedTag
                     {
                         TagId = it.TagId,
