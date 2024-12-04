@@ -78,8 +78,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         {
             var tagDomain = mapper.Map<Tag>(addTagRequestDto);
             var tagCreate = await tagRepository.CreateAsync(tagDomain);
-            
-            return CreatedAtAction("GetTag", new { id = tagCreate.Id }, tagCreate);
+            return CreatedAtAction("GetTagById", new { id = tagCreate.Id }, tagCreate);
         }
 
         // DELETE: api/Tags/5
