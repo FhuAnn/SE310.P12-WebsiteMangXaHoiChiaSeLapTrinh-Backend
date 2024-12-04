@@ -6,8 +6,6 @@
 
         public string Gravatar { get; set; } = "default";
 
-        public DateTime UpdatedAt { get; set; }
-
         public string Email { get; set; } = null!;
     }
 }

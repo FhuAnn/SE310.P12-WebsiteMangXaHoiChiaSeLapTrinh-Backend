@@ -112,7 +112,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             answerDomain = await answerRepository.UpdateAsync(x=> x.Id==id, entity =>
             {
                 entity.Body = answerDomain.Body;
-                entity.Id = answerDomain.Id;
+                entity.UpdatedAt = DateTime.Now;
             });
             if(answerDomain == null) { return NotFound(); }
             
