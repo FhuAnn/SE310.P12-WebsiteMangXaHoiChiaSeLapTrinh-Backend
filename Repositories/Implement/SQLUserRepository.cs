@@ -11,9 +11,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class SQLUserRepository : StackOverflowRepository<User>, IUserRepository
     {
-        private readonly StackOverflowDBContext context;
+        private readonly Stackoverflow1511Context context;
 
-        public SQLUserRepository(StackOverflowDBContext context) : base(context)
+        public SQLUserRepository(Stackoverflow1511Context context) : base(context)
         {
             this.context = context;
         }

@@ -7,9 +7,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class SQLTagRepository : StackOverflowRepository<Tag>, ITagRepository
     {
-        private readonly StackOverflowDBContext context;
+        private readonly Stackoverflow1511Context context;
 
-        public SQLTagRepository(StackOverflowDBContext context) : base(context)
+        public SQLTagRepository(Stackoverflow1511Context context) : base(context)
         {
             this.context = context;
         }

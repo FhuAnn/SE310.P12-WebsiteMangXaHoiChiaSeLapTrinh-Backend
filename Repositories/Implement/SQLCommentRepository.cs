@@ -7,9 +7,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class SQLCommentRepository : StackOverflowRepository<Comment>, ICommentRepository
     {
-        private readonly StackOverflowDBContext dbContext;
+        private readonly Stackoverflow1511Context dbContext;
 
-        public SQLCommentRepository(StackOverflowDBContext dbContext) : base(dbContext)
+        public SQLCommentRepository(Stackoverflow1511Context dbContext) : base(dbContext)
         {
                 this.dbContext = dbContext;
         }
@@ -28,10 +28,19 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<IEnumerable<Comment>> GetCommentsByEntityAsync(Guid entityId, int entityType)
+        public async Task<IEnumerable<Comment>> GetCommentsByPostAsync(Guid postId)
         {
             return await dbContext.Comments
-                .Where(c => c.EntityId == entityId && c.EntityType == entityType)
+                .Where(c => c.PostId == postId)
+                .Include(c => c.User)
+                .OrderBy(c => c.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Comment>> GetCommentsByAnswerAsync(Guid answerId)
+        {
+            return await dbContext.Comments
+                .Where(c => c.AnswerId == answerId)
                 .Include(c => c.User)
                 .OrderBy(c => c.CreatedAt)
                 .ToListAsync();

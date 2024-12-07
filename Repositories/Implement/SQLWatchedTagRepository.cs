@@ -7,9 +7,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class SQLWatchedTagRepository : StackOverflowRepository<WatchedTag>, IWatchedTagRepository
     {
-        private readonly StackOverflowDBContext dbcontext;
+        private readonly Stackoverflow1511Context dbcontext;
 
-        public SQLWatchedTagRepository(StackOverflowDBContext dbcontext) : base(dbcontext)
+        public SQLWatchedTagRepository(Stackoverflow1511Context dbcontext) : base(dbcontext)
         {
             this.dbcontext = dbcontext;
         }

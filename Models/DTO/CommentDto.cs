@@ -14,9 +14,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public Guid? UserId { get; set; }
 
-        public Guid? EntityId { get; set; }
+        public Guid? PostId { get; set; }
 
-        public int EntityType { get; set; }
-
+        public Guid? AnswerId { get; set; }
     }
 }

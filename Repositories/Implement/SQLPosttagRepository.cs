@@ -5,9 +5,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class SQLPosttagRepository : StackOverflowRepository<Posttag>, IPosttagRepository
     {
-        private readonly StackOverflowDBContext context;
+        private readonly Stackoverflow1511Context context;
 
-        public SQLPosttagRepository(StackOverflowDBContext context) : base(context)
+        public SQLPosttagRepository(Stackoverflow1511Context context) : base(context)
         {
             this.context = context;
         }

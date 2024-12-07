@@ -8,9 +8,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class SQLAnswerRepository : StackOverflowRepository<Answer>,IAnswerRepository
     {
-        private readonly StackOverflowDBContext dbContext;
+        private readonly Stackoverflow1511Context dbContext;
 
-        public SQLAnswerRepository(StackOverflowDBContext dbContext):base(dbContext) 
+        public SQLAnswerRepository(Stackoverflow1511Context dbContext):base(dbContext) 
         {
             this.dbContext = dbContext;
         }

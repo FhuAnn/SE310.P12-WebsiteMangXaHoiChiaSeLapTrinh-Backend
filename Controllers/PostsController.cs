@@ -169,12 +169,12 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                     var image = new Image
                     {
                         file = file,
-                        fileExtension = Path.GetExtension(file.FileName),
-                        fileSizeInBytes = file.Length,
-                        postId = postId,
+                        FileExtension = Path.GetExtension(file.FileName),
+                        FileSizeInBytes = file.Length,
+                        PostId = postId,
                         //FilePath = await SaveImageToLocal(file)
                     };
-                    if (image.postId == null)
+                    if (image.PostId == null)
                     {
                         return BadRequest("Ảnh phải liên kết với một Post ");
                     }

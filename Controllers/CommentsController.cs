@@ -63,10 +63,19 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
         
 
-        [HttpGet("entity/{entityId}")]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments(Guid entityId, [FromQuery] int entityType)
+        [HttpGet("post/{postId}")]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetPostComments(Guid postId)
         {
-            var comments = await _commentService.GetCommentsByEntityAsync(entityId, entityType);
+            var comments = await _commentService.GetCommentsByPostAsync(postId);
+            var commentDto = mapper.Map<List<CommentDto>>(comments);
+
+            return Ok(commentDto);
+        }
+
+        [HttpGet("answer/{answerId}")]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetAnswerComments(Guid answerId)
+        {
+            var comments = await _commentService.GetCommentsByAnswerAsync(answerId);
             var commentDto = mapper.Map<List<CommentDto>>(comments);
 
             return Ok(commentDto);

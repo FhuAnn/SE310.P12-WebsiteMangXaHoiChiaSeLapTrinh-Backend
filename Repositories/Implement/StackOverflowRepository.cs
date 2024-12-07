@@ -8,9 +8,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class StackOverflowRepository<T> : IStackOverflowRepository<T> where T : class
     {
-        private readonly StackOverflowDBContext dbContext;
+        private readonly Stackoverflow1511Context dbContext;
         private DbSet<T> _dbSet;
-        public StackOverflowRepository(StackOverflowDBContext dbContext)
+        public StackOverflowRepository(Stackoverflow1511Context dbContext)
         {
             this.dbContext = dbContext;
             _dbSet= dbContext.Set<T>();

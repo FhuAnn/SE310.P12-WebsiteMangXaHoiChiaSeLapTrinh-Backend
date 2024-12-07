@@ -22,11 +22,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
     /*[Authorize]*/
     public class AnswersController : ControllerBase
     {
-        private readonly StackOverflowDBContext _context;
+        private readonly Stackoverflow1511Context _context;
         private readonly IAnswerRepository answerRepository;
         private readonly IMapper mapper;
 
-        public AnswersController(StackOverflowDBContext context,IAnswerRepository answerRepository,IMapper mapper)
+        public AnswersController(Stackoverflow1511Context context,IAnswerRepository answerRepository,IMapper mapper)
         {
             _context = context;
             this.answerRepository = answerRepository;

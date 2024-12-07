@@ -38,8 +38,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services.Implement
 
             var comment = new Comment
             {
-                EntityType = 1, // EntityType for Postzz
-                EntityId = postId,
+                PostId =postId,
                 Body = body,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
@@ -65,8 +64,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services.Implement
 
             var comment = new Comment
             {
-                EntityType = 2, // EntityType for Answer
-                EntityId = answerId,
+                AnswerId = answerId,
                 Body = body,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
@@ -76,38 +74,17 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services.Implement
             return await _commentRepository.AddCommentAsync(comment);
         }
 
-        public async Task<Comment> ReplyToCommentAsync(Guid parentCommentId, string body, Guid userId)
+
+
+        public async Task<IEnumerable<Comment>> GetCommentsByPostAsync(Guid postId)
         {
-            var parentComment = await _commentRepository.GetByIdAsync(x => x.Id == parentCommentId);
-            if (parentComment == null)
-            {
-                throw new Exception("Parent comment not found.");
-            }
-
-            var user = await _userRepository.GetByIdAsync(x => x.Id == userId);
-            if (user == null)
-            {
-                throw new Exception("User not found.");
-            }
-
-            var reply = new Comment
-            {
-                EntityType = 3, // EntityType for Comment
-                EntityId = parentCommentId,
-                Body = body,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                UserId = userId,
-            };
-
-            return await _commentRepository.AddCommentAsync(reply);
+            return await _commentRepository.GetCommentsByPostAsync(postId);
         }
 
-        public async Task<IEnumerable<Comment>> GetCommentsByEntityAsync(Guid entityId, int entityType)
+        public async Task<IEnumerable<Comment>> GetCommentsByAnswerAsync(Guid answerId)
         {
-            return await _commentRepository.GetCommentsByEntityAsync(entityId, entityType);
+            return await _commentRepository.GetCommentsByAnswerAsync(answerId);
         }
-
         // Cập nhật phương thức sửa bình luận
         public async Task<Comment> UpdateCommentAsync(Guid commentId, string newBody, Guid userId)
         {

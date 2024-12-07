@@ -30,8 +30,8 @@ namespace NZWalk.API.Controllers
                 var imageDomainModel = new Image
                 {
                     file = request.File,
-                    fileExtension = Path.GetExtension(request.File.FileName),
-                    fileSizeInBytes = request.File.Length
+                    FileExtension = Path.GetExtension(request.File.FileName),
+                    FileSizeInBytes = request.File.Length
                 };
 
                 //user repository to upload image

@@ -117,9 +117,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                 var image = new Image
                 {
                     file = inputFile.file,
-                    fileExtension = Path.GetExtension(inputFile.file.FileName),
-                    fileSizeInBytes = inputFile.file.Length,
-                    userId = inputFile.targetId
+                    FileExtension = Path.GetExtension(inputFile.file.FileName),
+                    FileSizeInBytes = inputFile.file.Length,
+                    UserId = inputFile.targetId
                     //FilePath = await SaveImageToLocal(file)
                 };
                 

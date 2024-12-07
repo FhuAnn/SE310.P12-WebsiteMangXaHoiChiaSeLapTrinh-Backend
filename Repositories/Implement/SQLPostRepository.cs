@@ -12,10 +12,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class SQLPostRepository : StackOverflowRepository<Post>,IPostRepository
     {
-        private readonly StackOverflowDBContext dbContext;
+        private readonly Stackoverflow1511Context dbContext;
         private readonly IImageRepository imageRepository;
 
-        public SQLPostRepository(StackOverflowDBContext dbContext,IImageRepository imageRepository):base(dbContext) 
+        public SQLPostRepository(Stackoverflow1511Context dbContext,IImageRepository imageRepository):base(dbContext) 
         {
             this.dbContext = dbContext;
             this.imageRepository = imageRepository;
@@ -53,15 +53,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                            Body =cmt.Body,
                            CreatedAt=cmt.CreatedAt,
                            UpdatedAt = cmt.UpdatedAt,
-                           EntityType = cmt.EntityType,
-                           EntityId = cmt.EntityId,
+                           PostId = cmt.PostId
                        }).ToList()
                    }).ToList(),
                    Images = p.Images.Select(img=> new Image
                    {
-                       id = img.id,
-                       filePath = img.filePath,
-                       postId = img.postId,
+                       Id = img.Id,
+                       FilePath = img.FilePath,
+                       PostId = img.PostId,
                    }).ToList(),
                    Posttags = p.Posttags.Select(pt=> new Posttag
                    {

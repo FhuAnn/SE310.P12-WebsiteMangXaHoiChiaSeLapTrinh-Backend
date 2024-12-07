@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using NZWalk.API.Repositories;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.CustomIdentityValidator;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping;
-using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services;
@@ -61,7 +61,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddDbContext<StackOverflowDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectstring")));
+builder.Services.AddDbContext<Stackoverflow1511Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectstring")));
 builder.Services.AddScoped<IAnswerRepository, SQLAnswerRepository>();
 builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
 builder.Services.AddScoped<IUserRoleRepository, SQLUserRoleRepository>();

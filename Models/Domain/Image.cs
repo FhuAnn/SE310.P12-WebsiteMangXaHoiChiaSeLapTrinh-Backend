@@ -1,23 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
+
+public partial class Image
 {
-    public class Image
-    {
-        public Guid id { get; set; }
-        [NotMapped]
-        public IFormFile file { get; set; }
-        public string fileExtension { get; set; }
-        public long fileSizeInBytes { get; set; }
-        public string filePath { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
-        public Guid? postId { get; set; }
-        public virtual Post Post { get; set; }
+    public string FileExtension { get; set; } = null!;
 
-        public Guid? userId { get; set; }
-        public virtual User User
-        {
-            get; set;
-        }
-    }
+    [NotMapped]
+    public IFormFile file { get; set; }
+    public long FileSizeInBytes { get; set; }
+
+    public string FilePath { get; set; } = null!;
+
+    public Guid? PostId { get; set; }
+
+    public Guid? UserId { get; set; }
+
+    public virtual Post? Post { get; set; }
+
+    public virtual User? User { get; set; }
 }

@@ -15,11 +15,13 @@ public partial class Comment
 
     public Guid? UserId { get; set; }
 
-    public int EntityType { get; set; }
+    public Guid? PostId { get; set; }
 
-    public Guid EntityId { get; set; }
+    public Guid? AnswerId { get; set; }
+
+    public virtual Answer? Answer { get; set; }
 
     public virtual Post? Post { get; set; }
-    public virtual Answer? Answer { get; set; }
+
     public virtual User? User { get; set; }
 }
