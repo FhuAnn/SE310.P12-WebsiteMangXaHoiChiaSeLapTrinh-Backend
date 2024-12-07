@@ -24,7 +24,6 @@ public partial class Post
     public int Upvote { get; set; }
 
     public int Downvote { get; set; }
-
     public string Detailproblem { get; set; } = null!;
 
     public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();

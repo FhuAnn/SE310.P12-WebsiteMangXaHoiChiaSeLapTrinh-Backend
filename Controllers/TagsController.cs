@@ -11,6 +11,7 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 
@@ -86,9 +87,31 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> DeleteTag(Guid id)
         {
             await tagRepository.DeleteAsync(t => t.Id == id);
-            
-
             return NoContent();
+        }
+
+        [HttpGet("getWatchedTagByUserId")]
+        public async Task<IActionResult> GetWatchedTag(Guid userId)
+        {
+            var watchedTags = await watchedTagRepository.GetWatchedTagByUserIdAsync(userId);
+            if (watchedTags == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(mapper.Map<List<GetTagDto>>(watchedTags));
+        }
+
+        [HttpGet("getIgnoredTagByUserId")]
+        public async Task<IActionResult> GetIgnoredTags(Guid userId)
+        {
+            var ignoredTags = await ignoreTagRepository.GetIgnoredTagByUserIdAsync(userId);
+            if (ignoredTags == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<List<GetTagDto>>(ignoredTags));
         }
 
         [HttpPost("watch")]

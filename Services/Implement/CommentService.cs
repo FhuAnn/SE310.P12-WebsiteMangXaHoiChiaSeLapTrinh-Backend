@@ -38,7 +38,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services.Implement
 
             var comment = new Comment
             {
-                EntityType = 1, // EntityType for Post
+                EntityType = 1, // EntityType for Postzz
                 EntityId = postId,
                 Body = body,
                 CreatedAt = DateTime.UtcNow,
