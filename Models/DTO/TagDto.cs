@@ -12,5 +12,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 
         public string Description { get; set; } = null!;
         public virtual ICollection<PosttagDto>? Posttags { get; set; } = new List<PosttagDto>();
+
     }
 }

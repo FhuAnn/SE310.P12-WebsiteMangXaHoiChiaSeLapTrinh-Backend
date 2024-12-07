@@ -36,6 +36,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping
             CreateMap<AuthenUserDto, User>().ReverseMap();
             CreateMap<UpdateUserRequestDto, User>().ReverseMap();
             CreateMap<AddTagRequestDto, Tag>().ReverseMap();
+            CreateMap<GetTagDto, Tag>().ReverseMap();
         }
     }
 }
