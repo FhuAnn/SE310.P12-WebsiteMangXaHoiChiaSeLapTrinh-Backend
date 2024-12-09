@@ -29,7 +29,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                     PostId= ans.PostId ,
                     Upvote= ans.Upvote ,
                     Downvote= ans.Downvote ,
-                    Post= new Post
+                    Post = new Post
                     {
                         Id= ans.Post.Id ,
                         Title= ans.Post.Title ,

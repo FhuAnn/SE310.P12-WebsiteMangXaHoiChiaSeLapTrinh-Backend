@@ -1,4 +1,5 @@
 ﻿using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
 using System.Text.Json.Serialization;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
@@ -20,7 +21,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
         public int Downvote { get; set; }
         public ICollection<CommentDto> Comments { get; set; } = new List<CommentDto>();
 
-        //public virtual Post? Post { get; set; }
+        public virtual AnswerPostDto? Post { get; set; }
 
     }
 }
