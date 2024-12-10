@@ -20,8 +20,8 @@ namespace NZWalk.API.Controllers
        
         //Post: api/Images/Upload
         [HttpPost]
-        [Route("Upload/{postId}")]
-        public async Task<IActionResult> UpLoad(Guid postId,[FromForm] ImagesUploadRequestDto request)
+        [Route("Upload/{PostId}")]
+        public async Task<IActionResult> UpLoad([FromForm] ImagesUploadRequestDto request)
         {
             ValidateFileUpload(request);
             if (ModelState.IsValid)

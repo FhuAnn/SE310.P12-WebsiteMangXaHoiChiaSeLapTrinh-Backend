@@ -11,7 +11,7 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    public string Gravatar { get; set; } = null!;
+    public string Gravatar { get; set; } = Helpers.Helpers.randomDefaultAvatar();
 
     public int Views { get; set; }
 
