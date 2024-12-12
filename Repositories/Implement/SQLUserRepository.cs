@@ -126,5 +126,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                 }).SingleOrDefaultAsync();
             return users;
         }
+
+        public async Task<bool> UpdatePassword(User user, string newPassword)
+        {
+            user.Password = newPassword;
+
+            context.Entry(user).Property(u => u.Password).IsModified = true;
+
+            return await context.SaveChangesAsync() > 0;
+        }
     }
 }

@@ -270,6 +270,23 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             return Ok(postDtos);
         }
 
+        [HttpPost("track-view/{postId}")]
+        public async Task<IActionResult> TrackView(Guid postId)
+        {
+            // Kiểm tra xem bài viết có tồn tại không
+            var post = await postRepository.GetPostByPostIdAsync(postId);
+            if (post == null)
+            {
+                return NotFound(new { status = "error", message = "Bài viết không tồn tại." });
+            }
 
+            // Tăng số lượt xem bài viết
+            post.Views++;
+
+            // Lưu lại vào database
+            await postRepository.UpdatePostViewAsync(post);
+
+            return Ok(new { status = "success", message = "Lượt xem được tính." });
+        }
     }
 }

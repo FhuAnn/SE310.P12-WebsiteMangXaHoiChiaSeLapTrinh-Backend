@@ -246,5 +246,24 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                 }).ToListAsync();
             return posts;
         }
+
+        public async Task UpdatePostViewAsync(Post post)
+        {
+            // Tìm bài viết cần cập nhật
+            var existingPost = await dbContext.Posts
+                .FirstOrDefaultAsync(p => p.Id == post.Id);
+
+            if (existingPost != null)
+            {
+                // Cập nhật thông tin bài viết, ví dụ: số lượt xem
+                existingPost.Views = post.Views;
+
+                // Đánh dấu bài viết là đã thay đổi
+                dbContext.Posts.Update(existingPost);
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                await dbContext.SaveChangesAsync();
+            }
+        }
     }
 }

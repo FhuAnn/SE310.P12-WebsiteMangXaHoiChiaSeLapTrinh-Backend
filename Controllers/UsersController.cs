@@ -26,7 +26,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         private readonly IImageRepository imageRepository;
 
         public UsersController(IUserRepository userRepository,
-            IMapper mapper,IImageRepository imageRepository)
+            IMapper mapper, IImageRepository imageRepository)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
@@ -83,7 +83,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                 entity.Username = updateCommentRequestDto.Username;
                 entity.Email = updateCommentRequestDto.Email;
                 entity.Gravatar = updateCommentRequestDto.Gravatar;
-                entity.UpdatedAt= DateTime.Now;
+                entity.UpdatedAt = DateTime.Now;
             });
             if (userDomain == null) { return NotFound(); }
 
@@ -112,7 +112,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             ValidateFileUpload(inputFile.file);
             if (ModelState.IsValid)
             {
-           
+
                 // Kiểm tra và xử lý ảnh
                 var image = new Image
                 {
@@ -122,7 +122,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                     UserId = inputFile.targetId
                     //FilePath = await SaveImageToLocal(file)
                 };
-                
+
                 // Lưu ảnh vào cơ sở dữ liệu
                 image = await imageRepository.Upload(image);
                 var imageDto = mapper.Map<ImageDto>(image);
@@ -145,5 +145,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                 }
             }
         }
+
+
+        
     }
 }

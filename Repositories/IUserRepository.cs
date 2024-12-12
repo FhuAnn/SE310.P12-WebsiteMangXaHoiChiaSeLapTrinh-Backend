@@ -8,5 +8,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
         Task<List<User>> GetAllUserAsync();
         Task<User> GetUserByIdAsync(Guid id);
         Task<User> GetUserByEmailAsync(string email);
+        Task<bool> UpdatePassword(User user, string newPassword);
     }
 }
