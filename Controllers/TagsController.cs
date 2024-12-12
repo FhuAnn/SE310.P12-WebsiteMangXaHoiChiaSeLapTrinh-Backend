@@ -86,8 +86,16 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTag(Guid id)
         {
-            await tagRepository.DeleteAsync(t => t.Id == id);
-            return NoContent();
+            var result = await tagRepository.DeleteTagAsync(id);
+
+            if (result)
+            {
+                return Ok("Tag deleted successfully");
+            }
+            else
+            {
+                return NotFound("Tag not found");
+            }
         }
 
         [HttpGet("getWatchedTagByUserId")]

@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using NZWalk.API.Repositories;
+using Org.BouncyCastle.Asn1;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using System.Formats.Asn1;
@@ -264,6 +265,30 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                 // Lưu thay đổi vào cơ sở dữ liệu
                 await dbContext.SaveChangesAsync();
             }
+        }
+
+        public async Task<Post> DeletePostAsync(Guid postId)
+        {
+            var existingRecord = await dbContext.Posts.FirstOrDefaultAsync(post => post.Id == postId);
+            if (existingRecord == null)
+            {
+                return null; // Nếu không tìm thấy bài viết, trả về null
+            }
+
+            // Xóa các bản ghi trong bảng posttag có post_id = postId
+            var postTags = dbContext.Posttags.Where(pt => pt.PostId == postId);
+            dbContext.Posttags.RemoveRange(postTags);
+
+            var relatedAnswers = dbContext.Answers.Where(a => a.PostId == postId);
+            dbContext.Answers.RemoveRange(relatedAnswers);
+
+            // Xóa bài viết
+            dbContext.Posts.Remove(existingRecord);
+
+            // Lưu thay đổi vào cơ sở dữ liệu
+            await dbContext.SaveChangesAsync();
+
+            return existingRecord; // Trả về bài viết đã bị xóa
         }
     }
 }

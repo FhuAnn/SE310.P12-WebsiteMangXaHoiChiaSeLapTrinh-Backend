@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Hosting;
 using NZWalk.API.Models.DTO;
 using Azure.Core;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
+using System.Linq.Expressions;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
@@ -231,13 +233,16 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(Guid id)
         {
-            //Check if region exits
-            var postDomain = postRepository.DeleteAsync(x => x.Id == id);
-            if (postDomain == null) { return NotFound(); }
+            var deletedPost = await postRepository.DeletePostAsync(id);
 
-            //Map Domain Model to DTO
-            return Ok(mapper.Map<Post>(postDomain));
+            if (deletedPost == null)
+            {
+                return NotFound(new { message = "Bài viết không tồn tại" }); 
+            }
+
+            return Ok(new { message = "Bài viết đã bị xóa thành công", postId = id }); 
         }
+
 
         [HttpGet]
         [Route("details/{postId}")]
