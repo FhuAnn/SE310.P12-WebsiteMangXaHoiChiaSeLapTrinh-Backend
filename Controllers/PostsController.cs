@@ -293,5 +293,13 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
             return Ok(new { status = "success", message = "Lượt xem được tính." });
         }
+
+        [HttpGet]
+        [Route("searchPostByKeyWord")]
+        public async Task<ActionResult> SearchPostByKeyWord([FromQuery] string keyWord)
+        {
+            var posts = await postRepository.SearchPostByKeyword(keyWord);
+            return Ok(mapper.Map<List<HomePostDto>>(posts));
+        }
     }
 }

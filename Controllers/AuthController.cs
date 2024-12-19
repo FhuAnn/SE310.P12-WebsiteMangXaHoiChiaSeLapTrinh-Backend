@@ -42,25 +42,33 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
                 Password = registerRequestDto.Password
             };
 
-            var userCreateResult = await userRepository.CreateAsync(user);
-
-
-            if (userCreateResult != null)
+            var userExisting = await userRepository.GetUserByEmailAsync(user.Email);
+            if (userExisting == null)
             {
-                // Add roles to this User
+                var userCreateResult = await userRepository.CreateAsync(user);
 
-                var role = await roleRepository.GetRoleByName("newbie");
-                var result = await userRoleRepository.CreateAsync(new UserRole
-                {
-                    UserId = userCreateResult.Id,
-                    RoleId = role.Id
-                });
 
-                if (result != null)
+                if (userCreateResult != null)
                 {
-                    return Ok("User was registered! Please login");
+                    // Add roles to this User
+
+                    var role = await roleRepository.GetRoleByName("newbie");
+                    var result = await userRoleRepository.CreateAsync(new UserRole
+                    {
+                        UserId = userCreateResult.Id,
+                        RoleId = role.Id
+                    });
+
+                    if (result != null)
+                    {
+                        return Ok("User was registered! Please login");
+                    }
+
                 }
-
+            }
+            else
+            {
+                return BadRequest("User's email is existing");
             }
 
             return BadRequest("Something went wrong");

@@ -290,5 +290,38 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 
             return existingRecord; // Trả về bài viết đã bị xóa
         }
+
+        public async Task<List<Post>> SearchPostByKeyword(string keyword)
+        {
+            var posts = await dbContext.Posts
+                 .Where(p =>
+                           p.Title.Contains(keyword) ||
+                           p.Tryandexpecting.Contains(keyword) ||
+                            p.Detailproblem.Contains(keyword) ||
+                            p.Posttags.Any(pt => pt.Tag.Tagname.Contains(keyword))) // Kiểm tra TagName trong Posttags
+                             .OrderByDescending(p => p.CreatedAt) // Sắp xếp theo số câu trả lời
+                            .Select(p => new Post
+                            {
+                                Id = p.Id,
+                                Title = p.Title,
+                                Tryandexpecting = p.Tryandexpecting,
+                                Views = p.Views,
+                                CreatedAt = p.CreatedAt,
+                                UpdatedAt = p.UpdatedAt,
+                                UserId = p.UserId,
+                                Upvote = p.Upvote,
+                                Downvote = p.Downvote,
+                                Detailproblem = p.Detailproblem,
+                                Answers = p.Answers,
+                                User = p.User,
+                                Posttags = p.Posttags.Select(pt => new Posttag
+                                {
+                                    PostId = pt.PostId,
+                                    TagId = pt.TagId,
+                                    Tag = pt.Tag
+                                }).ToList()
+                            }).ToListAsync();
+            return posts;
+        }
     }
 }

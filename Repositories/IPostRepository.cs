@@ -14,5 +14,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
         Task<List<Post>> GetMostAnsweredQuestionAsync();
         Task UpdatePostViewAsync(Post post);
         Task<Post> DeletePostAsync(Guid postId);
+        Task<List<Post>> SearchPostByKeyword(string keyword);
     }
 }
