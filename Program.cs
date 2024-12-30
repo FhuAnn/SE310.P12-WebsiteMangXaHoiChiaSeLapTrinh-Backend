@@ -75,6 +75,7 @@ builder.Services.AddScoped<IImageRepository, LocalImageRepositiory>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPosttagRepository, SQLPosttagRepository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IReportRepository, SQLReportRepository>();
 builder.Services.AddScoped(typeof(IStackOverflowRepository<>),typeof(StackOverflowRepository<>));
 
 builder.Services.AddAutoMapper(typeof(AutomapperProfile));
@@ -91,7 +92,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey =
-        new SymmetricSecurityKey(
+        new SymmetricSecurityKey(   
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     }
  );

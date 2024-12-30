@@ -34,7 +34,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         private readonly IMapper mapper;
         private readonly IPosttagRepository posttagRepository;
         private readonly IImageRepository imageRepository;
-        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly IWebHostEnvironment webHostEnvironment;    
         private readonly IHttpContextAccessor httpContextAccessor;
 
         public PostsController(IPostRepository postRepository, IMapper mapper, IPosttagRepository posttagRepository, IImageRepository imageRepositiory,
