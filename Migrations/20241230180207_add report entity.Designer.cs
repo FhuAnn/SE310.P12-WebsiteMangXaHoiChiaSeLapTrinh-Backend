@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
@@ -11,9 +12,11 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 {
     [DbContext(typeof(Stackoverflow1511Context))]
-    partial class Stackoverflow1511ContextModelSnapshot : ModelSnapshot
+    [Migration("20241230180207_add report entity")]
+    partial class addreportentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,9 +243,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Report", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
@@ -403,34 +408,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("user_roles", (string)null);
-                });
-
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Vote", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("VoteType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("VotedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId", "PostId")
-                        .IsUnique();
-
-                    b.ToTable("Votes");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.WatchedTag", b =>
@@ -606,25 +583,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Vote", b =>
-                {
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Post", "Post")
-                        .WithMany("Votes")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
-                        .WithMany("Votes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.WatchedTag", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Tag", "Tag")
@@ -675,8 +633,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.Navigation("Posttags");
 
                     b.Navigation("Reports");
-
-                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Role", b =>
@@ -708,8 +664,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.Navigation("Reports");
 
                     b.Navigation("UserRoles");
-
-                    b.Navigation("Votes");
 
                     b.Navigation("WatchedTags");
                 });

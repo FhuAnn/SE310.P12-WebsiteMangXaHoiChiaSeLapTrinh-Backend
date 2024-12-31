@@ -35,5 +35,8 @@ public partial class User
 
     public virtual ICollection<WatchedTag> WatchedTags { get; set; } = new List<WatchedTag>();
     public virtual ICollection<IgnoredTag> IgnoredTags { get; set; } = new List<IgnoredTag>();
+    public ICollection<Report> Reports { get; set; }
+    public virtual ICollection<Vote> Votes { get; set; }
+
 
 }

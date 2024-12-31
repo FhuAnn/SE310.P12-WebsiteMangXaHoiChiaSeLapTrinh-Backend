@@ -35,8 +35,9 @@ public partial class Stackoverflow1511Context : DbContext
 
     public virtual DbSet<WatchedTag> WatchedTags { get; set; }
     public virtual DbSet<IgnoredTag> IgnoredTags { get; set; }
+    public virtual DbSet<Vote> Votes { get; set; }
 
-
+    public DbSet<Report> Reports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -308,6 +309,33 @@ public partial class Stackoverflow1511Context : DbContext
                 .WithMany(t => t.IgnoredTags)
                 .HasForeignKey(e => e.TagId);
         });
+
+        modelBuilder.Entity<Report>()
+            .HasOne(r => r.User)
+            .WithMany(u => u.Reports)
+            .HasForeignKey(r => r.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Report>()
+           .HasOne(r => r.Post)
+           .WithMany(p => p.Reports)
+           .HasForeignKey(r => r.PostId)    
+           .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Vote>()
+       .HasOne(v => v.User)
+       .WithMany(u => u.Votes)
+       .HasForeignKey(v => v.UserId);
+
+        modelBuilder.Entity<Vote>()
+            .HasOne(v => v.Post)
+            .WithMany(p => p.Votes)
+            .HasForeignKey(v => v.PostId);
+
+        // Đảm bảo mỗi người dùng chỉ vote 1 lần trên 1 bài viết
+        modelBuilder.Entity<Vote>()
+            .HasIndex(v => new { v.UserId, v.PostId })
+            .IsUnique();
 
         OnModelCreatingPartial(modelBuilder);
     }

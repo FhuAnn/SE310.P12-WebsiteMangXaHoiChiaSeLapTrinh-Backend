@@ -18,6 +18,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping
             CreateMap<Post, HomePostDto>().ReverseMap();
             CreateMap<Post, AddPostRequestDto>().ReverseMap();
             CreateMap<Post, UpdatePostRequestDto>().ReverseMap();
+            CreateMap<Vote,AddVote>().ReverseMap();
+            CreateMap<Vote,VoteDto>().ReverseMap();
             CreateMap<Comment, CommentDto>().ReverseMap();
             CreateMap<Comment, AddCommentRequestDto>().ReverseMap();
             CreateMap<Comment, UpdateCommentRequestDto>().ReverseMap();

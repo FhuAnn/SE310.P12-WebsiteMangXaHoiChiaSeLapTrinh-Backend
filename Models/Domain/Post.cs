@@ -36,6 +36,7 @@ public partial class Post
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
     public virtual ICollection<Posttag> Posttags { get; set; } = new List<Posttag>();
-
+    public ICollection<Report> Reports { get; set; }
+    public ICollection<Vote> Votes { get; set; }
     public virtual User? User { get; set; }
 }
