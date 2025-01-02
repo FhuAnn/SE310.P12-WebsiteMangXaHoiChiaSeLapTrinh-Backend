@@ -8,10 +8,12 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
     public class SQLReportRepository : IReportRepository
     {
         private readonly Stackoverflow1511Context context;
+        private readonly IPostRepository postRepository;
 
-        public SQLReportRepository(Stackoverflow1511Context context) 
+        public SQLReportRepository(Stackoverflow1511Context context,IPostRepository postRepository) 
         {
             this.context = context;
+            this.postRepository = postRepository;
         }
 
         public async Task<IEnumerable<Post>> getPostIn1YearAgo()
@@ -178,6 +180,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         {
             var existingReporst = await context.Reports.Where(r => r.PostId == id).ToListAsync();
             context.RemoveRange(existingReporst);
+            await postRepository.DeletePostAsync(id);
             return existingReporst;
         }
 
