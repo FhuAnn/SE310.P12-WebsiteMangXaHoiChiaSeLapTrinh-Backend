@@ -25,6 +25,7 @@ public partial class Post
     public int Downvote { get; set; }
 
     public string Detailproblem { get; set; } = null!;
+    public bool isDeleted { get; set; } = false;
 
     [NotMapped]
     public List<string>? ImageUrls { get; set; } = new List<string>();

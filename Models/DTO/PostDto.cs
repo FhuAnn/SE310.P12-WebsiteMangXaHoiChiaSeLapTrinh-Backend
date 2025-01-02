@@ -21,7 +21,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
         public Guid? UserId { get; set; }
         public int Upvote { get; set; }
         public int Downvote { get; set; }
-
+        public bool isDeleted { get; set; }
         public virtual ICollection<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
         public virtual ICollection<CommentDto> Comments { get; set; } = new List<CommentDto>();
 

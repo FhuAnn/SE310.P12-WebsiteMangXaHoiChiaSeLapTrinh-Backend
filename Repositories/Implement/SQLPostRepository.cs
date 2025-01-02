@@ -25,7 +25,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         public async Task<Post> GetPostDetailsAsync(Guid id)
         {
             var post = await dbContext.Posts
-               .Where(p => p.Id == id)
+               .Where(p => p.Id == id && p.isDeleted==false)
                .Select(p => new Post
                {
                    Id = p.Id,
@@ -83,6 +83,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             /*var posts = await dbContext.Posts.Include(p => p.Posttags).Include(p=>p.User).Include(p=>p.Answers).ToListAsync();
             return posts;*/
             var posts = await dbContext.Posts
+                .Where(p=> p.isDeleted == false)
                 .Select(p => new Post
                 {
                     Id= p.Id,
@@ -109,7 +110,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 
         public async Task<Post> GetPostById(Guid postId)
         {
-            return await dbContext.Posts.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == postId);
+            return await dbContext.Posts.Include(p => p.Images).Where(p => p.isDeleted == false).FirstOrDefaultAsync(p => p.Id == postId);
         }
 
         public async Task SavePost(Post post)
@@ -121,7 +122,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         public async Task<List<Post>> GetByTagIdAsync(Guid tagId)
         {
             var posts = await dbContext.Posts
-                .Where(p=>p.Posttags.Any(pt=>pt.TagId==tagId))
+                .Where(p=>p.Posttags.Any(pt=>pt.TagId==tagId)&&p.isDeleted==false)
                 .Select(p => new Post
                 {
                     Id = p.Id,
@@ -150,7 +151,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         public async Task<Post> GetPostByPostIdAsync(Guid id)
         {
             var post = await dbContext.Posts
-                .Where(p => p.Id==id)
+                .Where(p => p.Id==id && p.isDeleted == false)
                 .Select(p => new Post
                 {
                     Id = p.Id,
@@ -178,7 +179,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         public async Task<List<Post>> GetByUserIdAsync(Guid id)
         {
             var posts = await dbContext.Posts
-                .Where(p => p.UserId == id)
+                .Where(p => p.UserId == id && p.isDeleted == false)
                 .Select(p => new Post
                 {
                     Id = p.Id,
@@ -274,31 +275,20 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             {
                 return null; // Nếu không tìm thấy bài viết, trả về null
             }
-
-            // Xóa các bản ghi trong bảng posttag có post_id = postId
-            var postTags = dbContext.Posttags.Where(pt => pt.PostId == postId);
-            dbContext.Posttags.RemoveRange(postTags);
-
-            var relatedAnswers = dbContext.Answers.Where(a => a.PostId == postId);
-            dbContext.Answers.RemoveRange(relatedAnswers);
-
-            // Xóa bài viết
-            dbContext.Posts.Remove(existingRecord);
-
+            existingRecord.isDeleted = true;
             // Lưu thay đổi vào cơ sở dữ liệu
             await dbContext.SaveChangesAsync();
-
             return existingRecord; // Trả về bài viết đã bị xóa
         }
 
         public async Task<List<Post>> SearchPostByKeyword(string keyword)
         {
             var posts = await dbContext.Posts
-                 .Where(p =>
+                 .Where(p => p.isDeleted ==false &&(
                            p.Title.Contains(keyword) ||
                            p.Tryandexpecting.Contains(keyword) ||
                             p.Detailproblem.Contains(keyword) ||
-                            p.Posttags.Any(pt => pt.Tag.Tagname.Contains(keyword))) // Kiểm tra TagName trong Posttags
+                            p.Posttags.Any(pt => pt.Tag.Tagname.Contains(keyword)))) // Kiểm tra TagName trong Posttags
                              .OrderByDescending(p => p.CreatedAt) // Sắp xếp theo số câu trả lời
                             .Select(p => new Post
                             {

@@ -11,7 +11,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get
         public DateTime ReportedAt { get; set; }
         public MinimalUser User { get; set; }
 
-        public bool isSelf {  get; set; } 
+        public bool IsDeleted {  get; set; } 
     }
 }
     

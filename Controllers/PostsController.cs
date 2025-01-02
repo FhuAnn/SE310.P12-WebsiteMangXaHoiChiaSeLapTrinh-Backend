@@ -44,7 +44,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             this.postRepository = postRepository;
             this.mapper = mapper;
             this.posttagRepository = posttagRepository;
-            this.imageRepository = imageRepositiory;
+            this.imageRepository = imageRepositiory;    
             this.webHostEnvironment = webHostEnvironment;
             this.httpContextAccessor = httpContextAccessor;
             this.reportRepository = reportRepository;

@@ -142,7 +142,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         public async Task<IEnumerable<PostReportDto>> getReportedPost_sortByNumberOfReport()
         {
             var result = await context.Posts
-                        .Where(p => context.Reports.Any(r => r.PostId == p.Id&&r.IsDeleted==false))  // Chỉ lấy bài có báo cáo
+                        .Where(p => context.Reports.Any(r => r.PostId == p.Id && r.IsDeleted == false) && p.isDeleted==false)  // Chỉ lấy bài có báo cáo
                         .Select(p => new PostReportDto
                         {
                             Id = p.Id,
@@ -172,6 +172,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                 .Where(r => r.PostId == postId)
                 .CountAsync();
             return noOfReports;
+        }
+
+        public async Task<Report> confirmReport(Guid id)
+        {
+            var existingReport = await context.Reports.Where(r => r.Id == id).FirstOrDefaultAsync();
+            existingReport.IsDeleted = true;
+            await context.SaveChangesAsync();
+            return existingReport;
         }
     }
 }

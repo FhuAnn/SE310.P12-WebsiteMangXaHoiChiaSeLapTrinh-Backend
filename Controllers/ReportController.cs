@@ -150,7 +150,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var reports = await reportRepository.getAllReportsInAYear_unfinish();
             if(reports.Any())
                 //Convert Domain to Dto
-                return Ok(mapper.Map<ReportDto>(reports));
+                return Ok(mapper.Map<List<ReportDto>>(reports));
             return NotFound("Không có dữ liệu");
         }
         [HttpGet]
@@ -161,7 +161,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var reports = await reportRepository.getAllReportsIn30Days_unfinish();
             if(reports.Any())
                 //Convert Domain to Dto
-                return Ok(mapper.Map<ReportDto>(reports));
+                return Ok(mapper.Map<List<ReportDto>>(reports));
             return NotFound("Không có dữ liệu");
         }
 
@@ -173,7 +173,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var reports = await reportRepository.getAllReportsInADayBefore_unfinish();
             if (reports.Any())
                 //Convert Domain to Dto
-                return Ok(mapper.Map<ReportDto>(reports));
+                return Ok(mapper.Map<List<ReportDto>>(reports));
             return NotFound("Không có dữ liệu");
         }
         //
@@ -185,7 +185,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var reports = await reportRepository.getAllReportsInAYear_finished();
             if (reports.Any())
                 //Convert Domain to Dto
-                return Ok(mapper.Map<ReportDto>(reports));
+                return Ok(mapper.Map<List<ReportDto>>(reports));
             return NotFound("Không có dữ liệu");
         }
         [HttpGet]
@@ -194,7 +194,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         {
             var reports = await reportRepository.getAllReportsIn30Days_finished();
             if (reports.Any())
-                return Ok(mapper.Map<ReportDto>(reports));
+                return Ok(mapper.Map<List<ReportDto>>(reports));
             return NotFound("Không có dữ liệu");
         }
 
@@ -204,7 +204,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         {
             var reports = await reportRepository.getAllReportsInADayBefore_finished();
             if (reports.Any())
-                return Ok(mapper.Map<ReportDto>(reports));
+                return Ok(mapper.Map<List<ReportDto>>(reports));
             return NotFound("Không có dữ liệu");
         }
         [HttpGet]
@@ -215,6 +215,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             if (posts.Any())
                 return Ok(mapper.Map<PostDto>(posts));
             return NotFound("Không có dữ liệu");
+        }
+
+        [HttpPost]
+        [Route("confirmReport")]
+        public async Task<IActionResult> ConfirmReport(Guid reportId)
+        {
+            var result = await reportRepository.confirmReport(reportId);
+            return Ok(result);
         }
 
         [HttpGet]
