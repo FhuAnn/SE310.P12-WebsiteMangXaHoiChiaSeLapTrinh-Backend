@@ -165,6 +165,5 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         {
             return await context.Reports.Where(r => r.UserId== userId && r.PostId == postId).AnyAsync();
         }
-        public async Task<bool> 
     }
 }
