@@ -6,6 +6,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
     public interface IVoteRepository
     {
         Task<Vote> VotePost(Vote vote);
-        Task<VoteDetail> GetVoteDetails(Guid postId);
+        Task<VoteDetail> GetVoteDetails(Guid postId,Guid userId);
     }
 }

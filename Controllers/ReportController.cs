@@ -221,8 +221,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         [Route("checkUserReport")]
         public async Task<IActionResult> checkUserReport(Guid userId,Guid postId)
         {
-            var isReported = await reportRepository.checkUserReport(userId,postId);
-            return Ok(isReported);
+            var result = await reportRepository.checkUserReport(userId,postId);
+            return Ok(new {isReported = result });
         }
     }
 }

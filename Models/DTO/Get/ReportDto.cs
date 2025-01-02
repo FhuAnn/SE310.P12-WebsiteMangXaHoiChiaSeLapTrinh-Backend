@@ -10,5 +10,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get
         public string Reason { get; set; }  // Lý do report
         public DateTime ReportedAt { get; set; }
         public MinimalUser User { get; set; }
+
+        public bool isSelf {  get; set; } 
     }
 }
+    

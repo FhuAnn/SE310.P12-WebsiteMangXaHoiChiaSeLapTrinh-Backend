@@ -22,9 +22,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         }
 
         [HttpGet("votedetail")]
-        public async Task<IActionResult> VoteDetail(Guid postId)
+        public async Task<IActionResult> VoteDetail(Guid postId,Guid userId)
         {
-            var voteDetails = await voteRepository.GetVoteDetails(postId);
+            var voteDetails = await voteRepository.GetVoteDetails(postId,userId);
             if (voteDetails == null)
             {
                 return NotFound();  // Nếu không tìm thấy bài đăng, trả về 404.
