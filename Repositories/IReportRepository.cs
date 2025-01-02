@@ -25,5 +25,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
         Task<IEnumerable<Report>> getAllReportsInADayBefore_finished();
         Task<IEnumerable<PostReportDto>> getReportedPost_sortByNumberOfReport();
         Task<bool> checkUserReport(Guid userId, Guid postId);
+        Task<int> noOfReports(Guid postId);
     }
 }

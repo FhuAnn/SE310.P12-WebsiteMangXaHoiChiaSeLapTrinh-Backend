@@ -27,6 +27,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                 {
                     existingVote.VoteType = vote.VoteType;  // Cập nhật upvote/downvote
                 }
+                var votedPost = await context.Posts.FirstOrDefaultAsync(p=>p.Id == vote.PostId);
+                if (vote.VoteType == 1) votedPost.Upvote++;
+                if (vote.VoteType == 2) votedPost.Downvote++;
                 await context.SaveChangesAsync();
                 return existingVote;
             }
@@ -45,20 +48,21 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         }
         public async Task<VoteDetail> GetVoteDetails(Guid postId, Guid userId)
         {
-            var isVoted = await context.Votes
+            var voteType = await context.Votes
             .Where(v => v.PostId == postId && v.UserId == userId)
-            .AnyAsync();
-
+            .Select(v => v.VoteType)
+            .FirstOrDefaultAsync();
+            if(voteType == null) voteType = 0;
             var result = await context.Posts
             .Where(p => p.Id == postId)
             .Select(p => new VoteDetail
             {
                 upVotes = p.Votes.Count(v => v.VoteType == 1),
                 downVotes = p.Votes.Count(v => v.VoteType == -1),
-                isVoted = isVoted
+                voteType = voteType 
             })
             .FirstOrDefaultAsync();
-            return result ?? new VoteDetail { upVotes = 0, downVotes = 0,isVoted=false };
+            return result ?? new VoteDetail { upVotes = 0, downVotes = 0, voteType = 0 };
         }
     }
 }

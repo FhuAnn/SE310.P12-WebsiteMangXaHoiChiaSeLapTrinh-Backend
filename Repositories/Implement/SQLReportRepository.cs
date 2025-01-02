@@ -165,5 +165,13 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         {
             return await context.Reports.Where(r => r.UserId== userId && r.PostId == postId).AnyAsync();
         }
+
+        public async Task<int> noOfReports(Guid postId)
+        {
+            var noOfReports = await context.Reports
+                .Where(r => r.PostId == postId)
+                .CountAsync();
+            return noOfReports;
+        }
     }
 }

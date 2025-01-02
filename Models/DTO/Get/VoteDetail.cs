@@ -4,6 +4,6 @@
     {
         public int downVotes { get; set; }
         public int upVotes { get; set; }
-        public bool isVoted { get; set; }    
+        public int voteType { get; set; }    
     }
 }

@@ -36,9 +36,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         private readonly IImageRepository imageRepository;
         private readonly IWebHostEnvironment webHostEnvironment;    
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IReportRepository reportRepository;
 
         public PostsController(IPostRepository postRepository, IMapper mapper, IPosttagRepository posttagRepository, IImageRepository imageRepositiory,
-            IWebHostEnvironment webHostEnvironment,IHttpContextAccessor httpContextAccessor, IImageRepository imageRepository)
+            IWebHostEnvironment webHostEnvironment,IHttpContextAccessor httpContextAccessor, IImageRepository imageRepository,IReportRepository reportRepository)
         {
             this.postRepository = postRepository;
             this.mapper = mapper;
@@ -46,6 +47,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             this.imageRepository = imageRepositiory;
             this.webHostEnvironment = webHostEnvironment;
             this.httpContextAccessor = httpContextAccessor;
+            this.reportRepository = reportRepository;
         }
 
         // GET: api/Posts
@@ -63,10 +65,16 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult<List<Post>>> GetPostsHome()
         {
             //Get Data from Database - Domain models
-            var postDomain = await postRepository.GetPostHomesAsync();
-            
+            var postDomains = await postRepository.GetPostHomesAsync();
+            var postDtos = mapper.Map<List<HomePostDto>>(postDomains);
+            foreach (var post in postDtos)
+            {
+                var noOfReports = await reportRepository.noOfReports(post.Id);
+                post.noOfReports=noOfReports;
+
+            }
             //Convert Domain to Dto
-            return Ok(mapper.Map<List<HomePostDto>>(postDomain));
+            return Ok(postDtos);
         }
 
         // GET: api/Posts/5
