@@ -217,11 +217,19 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             return NotFound("Không có dữ liệu");
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("confirmReport")]
-        public async Task<IActionResult> ConfirmReport(Guid reportId)
+        public async Task<IActionResult> ConfirmReport(Guid postId)
         {
-            var result = await reportRepository.confirmReport(reportId);
+            var result = await reportRepository.confirmReport(postId);
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("ignoreReport")]
+        public async Task<IActionResult> IgnoreReport(Guid postId)
+        {
+            var result = await reportRepository.ignoreReportRange(postId);
             return Ok(result);
         }
 

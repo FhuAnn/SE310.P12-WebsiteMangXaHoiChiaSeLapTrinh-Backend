@@ -174,12 +174,22 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             return noOfReports;
         }
 
-        public async Task<Report> confirmReport(Guid id)
+        public async Task<IEnumerable<Report>> confirmReport(Guid id)
         {
-            var existingReport = await context.Reports.Where(r => r.Id == id).FirstOrDefaultAsync();
-            existingReport.IsDeleted = true;
+            var existingReporst = await context.Reports.Where(r => r.PostId == id).ToListAsync();
+            context.RemoveRange(existingReporst);
+            return existingReporst;
+        }
+
+        public async Task<IEnumerable<Report>> ignoreReportRange(Guid id)
+        {
+            var existingReports = await context.Reports.Where(r => r.PostId == id).ToListAsync();
+            foreach(var report in existingReports)
+            {
+                report.IsDeleted = true;
+            }
             await context.SaveChangesAsync();
-            return existingReport;
+            return existingReports;
         }
     }
 }
