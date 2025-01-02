@@ -16,20 +16,30 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
         }
         public async Task<Vote> VotePost(Vote vote)
         {
+            var votedPost = await context.Posts.FirstOrDefaultAsync(p => p.Id == vote.PostId);
             var existingVote = await context.Votes.FirstOrDefaultAsync(v => v.UserId == vote.UserId && v.PostId == vote.PostId);
             if (existingVote != null)
             {
                 if (existingVote.VoteType == vote.VoteType)
                 {
+                    if (vote.VoteType == 1) votedPost.Upvote--;
+                    if (vote.VoteType == -1) votedPost.Downvote--;
                     context.Votes.Remove(existingVote);  // Hủy vote nếu nhấn lần nữa
                 }
                 else
                 {
                     existingVote.VoteType = vote.VoteType;  // Cập nhật upvote/downvote
                 }
-                var votedPost = await context.Posts.FirstOrDefaultAsync(p=>p.Id == vote.PostId);
-                if (vote.VoteType == 1) votedPost.Upvote++;
-                if (vote.VoteType == -1) votedPost.Downvote++;
+                if (existingVote.VoteType == 1)
+                {
+                    votedPost.Upvote--;
+                    votedPost.Downvote++;
+                }
+                if (existingVote.VoteType == -1)
+                {
+                    votedPost.Upvote++;
+                    votedPost.Downvote--;
+                }
                 await context.SaveChangesAsync();
                 return existingVote;
             }
@@ -41,6 +51,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                     PostId = vote.PostId,
                     VoteType = vote.VoteType
                 };
+                if (vote.VoteType == 1) votedPost.Upvote++;
+                if (vote.VoteType == -1) votedPost.Downvote++;
                 context.Votes.Add(newVote);
                 await context.SaveChangesAsync();
                 return newVote;
