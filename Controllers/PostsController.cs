@@ -55,10 +55,15 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> GetAll()
         {
             //Get Data from Database - Domain models
-           var postDomain = await postRepository.GetPostHomesAsync();
-
+            var postDomains = await postRepository.GetPostHomesAsync();
+            var postDtos = mapper.Map<List<HomePostDto>>(postDomains);
+            foreach (var post in postDtos)
+            {
+                var noOfReports = await reportRepository.noOfReports(post.Id);
+                post.noOfReports = noOfReports;
+            }
             //Convert Domain to Dto
-            return Ok(mapper.Map<List<HomePostDto>>(postDomain));
+            return Ok(postDtos);
         }
 
         [HttpGet("gethomepost")]

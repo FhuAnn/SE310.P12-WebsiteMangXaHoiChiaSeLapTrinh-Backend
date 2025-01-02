@@ -23,22 +23,22 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                 if (existingVote.VoteType == vote.VoteType)
                 {
                     if (vote.VoteType == 1) votedPost.Upvote--;
-                    if (vote.VoteType == -1) votedPost.Downvote--;
+                    if (vote.VoteType == -1) votedPost.Downvote++;
                     context.Votes.Remove(existingVote);  // Hủy vote nếu nhấn lần nữa
                 }
                 else
                 {
+                    if (existingVote.VoteType == 1)
+                    {
+                        votedPost.Upvote--;
+                        votedPost.Downvote++;
+                    }
+                    if (existingVote.VoteType == -1)
+                    {
+                        votedPost.Upvote++;
+                        votedPost.Downvote--;
+                    }
                     existingVote.VoteType = vote.VoteType;  // Cập nhật upvote/downvote
-                }
-                if (existingVote.VoteType == 1)
-                {
-                    votedPost.Upvote--;
-                    votedPost.Downvote++;
-                }
-                if (existingVote.VoteType == -1)
-                {
-                    votedPost.Upvote++;
-                    votedPost.Downvote--;
                 }
                 await context.SaveChangesAsync();
                 return existingVote;
