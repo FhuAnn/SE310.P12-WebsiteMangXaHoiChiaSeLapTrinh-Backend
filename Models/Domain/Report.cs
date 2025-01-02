@@ -7,7 +7,7 @@
         public Guid PostId { get; set; }  // Bài viết bị report
         public string Reason { get; set; }  // Lý do report
         public DateTime ReportedAt { get; set; } = DateTime.Now;
-
+        public bool IsDeleted { get; set; } = false;
         // Khóa ngoại
         public User User { get; set; }
         public Post Post { get; set; }

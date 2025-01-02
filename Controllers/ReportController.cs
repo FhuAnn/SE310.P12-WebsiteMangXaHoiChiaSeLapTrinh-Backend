@@ -128,10 +128,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         }
 
         [HttpGet]
-        [Route("getReportsForPost")]
-        public async Task<IActionResult> getReportsForPost(Guid postId)
+        [Route("getReportsOfPost")]
+        public async Task<IActionResult> getReportsFromPost(Guid postId)
         {
-            var reportsDomain = await reportRepository.getReportsForPost(postId);
+            var reportsDomain = await reportRepository.getReportsFromPost(postId);
 
             if(reportsDomain.Count>0)
             {
@@ -141,51 +141,73 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         }
 
         [HttpGet]
-        [Route("getReportsForPostIn1Year")]
-        public async Task<IActionResult> getReportsForPostIn1Year(Guid postId)
-        {
-            var reportsDomain = await reportRepository.getReportsForPost(postId);
-
-            if (reportsDomain.Count > 0)
-            {
-                return Ok(mapper.Map<List<ReportDto>>(reportsDomain));
-            }
-            return NotFound("Không có báo cáo vi phạm nào");
-        }
-
-        [HttpGet]
-        [Route("getReportsForPost1Year")]
-        public async Task<IActionResult> getReportsIn1YearAgo()
+        [Route("getAllReportsPost1Year_unfinish")]
+        public async Task<IActionResult> getAllReportsIn1YearAgo_unfinish()
         {
             //Get Data from Database - Domain models
-            var posts = await reportRepository.getReportsIn1YearAgo();
+            var posts = await reportRepository.getAllReportsInAYear_unfinish();
             if(posts.Any())
             //Convert Domain to Dto
             return Ok(posts);
-            return NotFound("Không tìm thấy");
+            return NotFound("Không có dữ liệu");
         }
         [HttpGet]
-        [Route("getReportsForPost30Days")]
-        public async Task<IActionResult> getReportsIn30DaysAgo()
+        [Route("getAllReportsPost30Days_unfinish")]
+        public async Task<IActionResult> getReportsIn30DaysAgo_unfinish()
         {
             //Get Data from Database - Domain models
-            var posts = await reportRepository.getReportsIn30DaysAgo();
+            var posts = await reportRepository.getAllReportsIn30Days_unfinish();
             if(posts.Any())
             //Convert Domain to Dto
             return Ok(posts);
-            return NotFound("Không tìm thấy");
+            return NotFound("Không có dữ liệu");
         }
 
         [HttpGet]
-        [Route("getReportsForPostToday")]
-        public async Task<IActionResult> getReportsInToday()
+        [Route("getAllReportsInADayBefore_unfinish")]
+        public async Task<IActionResult> getReportsInADayAgo_unfinish()
         {
             //Get Data from Database - Domain models
-            var posts = await reportRepository.getReportsInToday();
+            var posts = await reportRepository.getAllReportsInADayBefore_unfinish();
             if (posts.Any())
                 //Convert Domain to Dto
                 return Ok(posts);
-            return NotFound("Không tìm thấy");
+            return NotFound("Không có dữ liệu");
+        }
+        //
+        [HttpGet]
+        [Route("getAllReportsPost1Year_finished")]
+        public async Task<IActionResult> getAllReportsIn1YearAgo_finished()
+        {
+            //Get Data from Database - Domain models
+            var posts = await reportRepository.getAllReportsInAYear_finished();
+            if (posts.Any())
+                //Convert Domain to Dto
+                return Ok(posts);
+            return NotFound("Không có dữ liệu");
+        }
+        [HttpGet]
+        [Route("getAllReportsPost30Days_finished")]
+        public async Task<IActionResult> getReportsIn30DaysAgo_finished()
+        {
+            //Get Data from Database - Domain models
+            var posts = await reportRepository.getAllReportsIn30Days_finished();
+            if (posts.Any())
+                //Convert Domain to Dto
+                return Ok(posts);
+            return NotFound("Không có dữ liệu");
+        }
+
+        [HttpGet]
+        [Route("getAllReportsInADayBefore_finished")]
+        public async Task<IActionResult> getReportsInADayAgo_finished()
+        {
+            //Get Data from Database - Domain models
+            var posts = await reportRepository.getAllReportsInADayBefore_finished();
+            if (posts.Any())
+                //Convert Domain to Dto
+                return Ok(posts);
+            return NotFound("Không có dữ liệu");
         }
     }
 }

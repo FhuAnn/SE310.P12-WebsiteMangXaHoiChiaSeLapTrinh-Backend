@@ -16,9 +16,12 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
         Task<IEnumerable<Answer>> getAnswersIn30DaysAgo();
         Task<IEnumerable<Answer>> getAnwsersInToday();
         Task<bool> createReport(Report report);
-        Task<List<Report>> getReportsForPost(Guid postId);
-        Task<IEnumerable<PostReportDto>> getReportsIn1YearAgo();
-        Task<IEnumerable<PostReportDto>> getReportsIn30DaysAgo();
-        Task<IEnumerable<PostReportDto>> getReportsInToday();
+        Task<List<Report>> getReportsFromPost(Guid postId);
+        Task<IEnumerable<Report>> getAllReportsInAYear_unfinish();
+        Task<IEnumerable<Report>> getAllReportsIn30Days_unfinish();
+        Task<IEnumerable<Report>> getAllReportsInADayBefore_unfinish();
+        Task<IEnumerable<Report>> getAllReportsInAYear_finish();
+        Task<IEnumerable<Report>> getAllReportsIn30Days_finish();
+        Task<IEnumerable<Report>> getAllReportsInADayBefore_finish();
     }
 }
