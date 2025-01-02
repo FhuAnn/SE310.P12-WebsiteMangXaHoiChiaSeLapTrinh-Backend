@@ -29,7 +29,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                 }
                 var votedPost = await context.Posts.FirstOrDefaultAsync(p=>p.Id == vote.PostId);
                 if (vote.VoteType == 1) votedPost.Upvote++;
-                if (vote.VoteType == 2) votedPost.Downvote++;
+                if (vote.VoteType == -1) votedPost.Downvote++;
                 await context.SaveChangesAsync();
                 return existingVote;
             }
