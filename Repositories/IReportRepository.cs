@@ -20,8 +20,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
         Task<IEnumerable<Report>> getAllReportsInAYear_unfinish();
         Task<IEnumerable<Report>> getAllReportsIn30Days_unfinish();
         Task<IEnumerable<Report>> getAllReportsInADayBefore_unfinish();
-        Task<IEnumerable<Report>> getAllReportsInAYear_finish();
-        Task<IEnumerable<Report>> getAllReportsIn30Days_finish();
-        Task<IEnumerable<Report>> getAllReportsInADayBefore_finish();
+        Task<IEnumerable<Report>> getAllReportsInAYear_finished();
+        Task<IEnumerable<Report>> getAllReportsIn30Days_finished();
+        Task<IEnumerable<Report>> getAllReportsInADayBefore_finished();
+        Task<IEnumerable<PostReportDto>> getReportedPost_sortByNumberOfReport();
     }
 }

@@ -68,7 +68,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         {
             var comments = await _commentService.GetCommentsByPostAsync(postId);
             var commentDto = mapper.Map<List<CommentDto>>(comments);
-
             return Ok(commentDto);
         }
 

@@ -1,4 +1,6 @@
-﻿namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get
+﻿using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
+
+namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get
 {
     public class PostReportDto
     {
@@ -8,6 +10,7 @@
         public string Tryandexpecting { get; set; } 
 
         public int Views { get; set; }
+        public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
         public DateTime CreatedAt { get; set; } 
 

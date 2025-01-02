@@ -1,4 +1,5 @@
 ﻿using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 {
@@ -17,5 +18,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
         public Guid? PostId { get; set; }
 
         public Guid? AnswerId { get; set; }
+
+        public virtual MinimalUser? User { get; set; }
     }
 }

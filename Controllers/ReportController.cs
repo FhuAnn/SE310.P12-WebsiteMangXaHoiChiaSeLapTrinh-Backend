@@ -5,6 +5,7 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
+using System.ComponentModel;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
@@ -122,7 +123,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             var reportDomain = mapper.Map<Report>(addReport);
             if (await reportRepository.createReport(reportDomain))
             {
-                return Ok(new { message = "Báo cáo bài viết thành công " });
+                return Ok(new { message = "Báo cáo bài viết thành công ", isReport = true });
             }
             return BadRequest("Báo cáo thất bại");
         }
@@ -135,6 +136,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
             if(reportsDomain.Count>0)
             {
+
                 return Ok(mapper.Map<List<ReportDto>>(reportsDomain));
             }
             return NotFound("Không có báo cáo vi phạm nào");
@@ -145,10 +147,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> getAllReportsIn1YearAgo_unfinish()
         {
             //Get Data from Database - Domain models
-            var posts = await reportRepository.getAllReportsInAYear_unfinish();
-            if(posts.Any())
-            //Convert Domain to Dto
-            return Ok(posts);
+            var reports = await reportRepository.getAllReportsInAYear_unfinish();
+            if(reports.Any())
+                //Convert Domain to Dto
+                return Ok(mapper.Map<ReportDto>(reports));
             return NotFound("Không có dữ liệu");
         }
         [HttpGet]
@@ -156,10 +158,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> getReportsIn30DaysAgo_unfinish()
         {
             //Get Data from Database - Domain models
-            var posts = await reportRepository.getAllReportsIn30Days_unfinish();
-            if(posts.Any())
-            //Convert Domain to Dto
-            return Ok(posts);
+            var reports = await reportRepository.getAllReportsIn30Days_unfinish();
+            if(reports.Any())
+                //Convert Domain to Dto
+                return Ok(mapper.Map<ReportDto>(reports));
             return NotFound("Không có dữ liệu");
         }
 
@@ -168,10 +170,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> getReportsInADayAgo_unfinish()
         {
             //Get Data from Database - Domain models
-            var posts = await reportRepository.getAllReportsInADayBefore_unfinish();
-            if (posts.Any())
+            var reports = await reportRepository.getAllReportsInADayBefore_unfinish();
+            if (reports.Any())
                 //Convert Domain to Dto
-                return Ok(posts);
+                return Ok(mapper.Map<ReportDto>(reports));
             return NotFound("Không có dữ liệu");
         }
         //
@@ -180,21 +182,19 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> getAllReportsIn1YearAgo_finished()
         {
             //Get Data from Database - Domain models
-            var posts = await reportRepository.getAllReportsInAYear_finished();
-            if (posts.Any())
+            var reports = await reportRepository.getAllReportsInAYear_finished();
+            if (reports.Any())
                 //Convert Domain to Dto
-                return Ok(posts);
+                return Ok(mapper.Map<ReportDto>(reports));
             return NotFound("Không có dữ liệu");
         }
         [HttpGet]
         [Route("getAllReportsPost30Days_finished")]
         public async Task<IActionResult> getReportsIn30DaysAgo_finished()
         {
-            //Get Data from Database - Domain models
-            var posts = await reportRepository.getAllReportsIn30Days_finished();
-            if (posts.Any())
-                //Convert Domain to Dto
-                return Ok(posts);
+            var reports = await reportRepository.getAllReportsIn30Days_finished();
+            if (reports.Any())
+                return Ok(mapper.Map<ReportDto>(reports));
             return NotFound("Không có dữ liệu");
         }
 
@@ -202,12 +202,27 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         [Route("getAllReportsInADayBefore_finished")]
         public async Task<IActionResult> getReportsInADayAgo_finished()
         {
-            //Get Data from Database - Domain models
-            var posts = await reportRepository.getAllReportsInADayBefore_finished();
-            if (posts.Any())
-                //Convert Domain to Dto
-                return Ok(posts);
+            var reports = await reportRepository.getAllReportsInADayBefore_finished();
+            if (reports.Any())
+                return Ok(mapper.Map<ReportDto>(reports));
             return NotFound("Không có dữ liệu");
+        }
+        [HttpGet]
+        [Route("getReportedPost_sortByNumberOfReport")]
+        public async Task<IActionResult> getReportedPost_sortByNumberOfReport()
+        {
+            var posts = await reportRepository.getReportedPost_sortByNumberOfReport();
+            if (posts.Any())
+                return Ok(mapper.Map<PostDto>(posts));
+            return NotFound("Không có dữ liệu");
+        }
+
+        [HttpGet]
+        [Route("checkUserReport")]
+        public async Task<IActionResult> checkUserReport(Guid userId,Guid postId)
+        {
+            var isReported = await reportRepository.checkUserReport(userId,postId);
+            return Ok(isReported);
         }
     }
 }

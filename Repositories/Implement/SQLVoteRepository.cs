@@ -43,17 +43,22 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                 return newVote;
             }
         }
-        public async Task<VoteDetail> GetVoteDetails(Guid postId)
+        public async Task<VoteDetail> GetVoteDetails(Guid postId, Guid userId)
         {
+            var isVoted = await context.Votes
+            .Where(v => v.PostId == postId && v.UserId == userId)
+            .AnyAsync();
+
             var result = await context.Posts
             .Where(p => p.Id == postId)
             .Select(p => new VoteDetail
             {
                 upVotes = p.Votes.Count(v => v.VoteType == 1),
-                downVotes = p.Votes.Count(v => v.VoteType == -1)
+                downVotes = p.Votes.Count(v => v.VoteType == -1),
+                isVoted = isVoted
             })
             .FirstOrDefaultAsync();
-            return result ?? new VoteDetail { upVotes = 0, downVotes = 0 };
+            return result ?? new VoteDetail { upVotes = 0, downVotes = 0,isVoted=false };
         }
     }
 }
