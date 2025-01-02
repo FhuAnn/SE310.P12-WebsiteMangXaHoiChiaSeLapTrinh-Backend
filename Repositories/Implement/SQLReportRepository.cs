@@ -1,5 +1,7 @@
 ﻿using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.HttpResults;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
@@ -72,6 +74,87 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             var dayAgo = DateTime.Now.AddDays(-1);
             var answers = await context.Answers.Where(u => u.CreatedAt >= dayAgo).ToListAsync();
             return answers;
+        }
+
+        public async Task<bool> createReport(Report report)
+        {
+            await context.Reports.AddAsync(report);
+            await context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<Report>> getReportsForPost(Guid postId)
+        {
+            var reports = await context.Reports
+                .Where(r=>r.PostId == postId)
+                .ToListAsync();
+            return reports;
+        }
+
+        public async Task<IEnumerable<PostReportDto>> getReportsIn1YearAgo()
+        {
+            var oneYearAgo = DateTime.UtcNow.AddYears(-1);
+            var result = await context.Posts
+                        .Where(p => context.Reports.Any(r => r.PostId == p.Id))  // Chỉ lấy bài có báo cáo
+                        .Select(p => new PostReportDto
+                        {
+                            Id = p.Id,
+                            Title = p.Title,
+                            Tryandexpecting = p.Tryandexpecting,
+                            CreatedAt = p.CreatedAt,
+                            UpdatedAt = p.UpdatedAt,
+                            reportCount = context.Reports
+                                                .Where(r => r.PostId == p.Id && r.ReportedAt >= oneYearAgo)  // Đếm số lượng báo cáo trong 1 năm
+                                                .Count()
+                        })
+                        .Where(p => p.reportCount > 0)  
+                        .OrderByDescending(p => p.reportCount)  // Sắp xếp giảm dần
+                        .ToListAsync();
+                        return result;
+        }
+
+        public async Task<IEnumerable<PostReportDto>> getReportsIn30DaysAgo()
+        {
+            var thirdtyDaysAgo = DateTime.UtcNow.AddDays(-30);
+            var result = await context.Posts
+                        .Where(p => context.Reports.Any(r => r.PostId == p.Id))  // Chỉ lấy bài có báo cáo
+                        .Select(p => new PostReportDto
+                        {
+                            Id = p.Id,
+                            Title = p.Title,
+                            Tryandexpecting = p.Tryandexpecting,
+                            CreatedAt = p.CreatedAt,
+                            UpdatedAt = p.UpdatedAt,
+                            reportCount = context.Reports
+                                                .Where(r => r.PostId == p.Id && r.ReportedAt >= thirdtyDaysAgo)  // Đếm số lượng báo cáo trong 1 năm
+                                                .Count()
+                        })
+                        .Where(p => p.reportCount > 0)
+                        .OrderByDescending(p => p.reportCount)  // Sắp xếp giảm dần
+                        .ToListAsync();
+            return result;
+        }
+
+        public async Task<IEnumerable<PostReportDto>> getReportsInToday()
+        {
+            var oneDayAgo = DateTime.UtcNow.AddDays(-1);
+            var result = await context.Posts
+                        .Where(p => context.Reports.Any(r => r.PostId == p.Id))  // Chỉ lấy bài có báo cáo
+                        .Select(p => new PostReportDto
+                        {
+                            Id = p.Id,
+                            Title = p.Title,
+                            Tryandexpecting = p.Tryandexpecting,
+                            CreatedAt = p.CreatedAt,
+                            UpdatedAt = p.UpdatedAt,
+                            reportCount = context.Reports
+                                                .Where(r => r.PostId == p.Id && r.ReportedAt >= oneDayAgo)  // Đếm số lượng báo cáo trong 1 năm
+                                                .Count()
+                        })
+                        .Where(p => p.reportCount > 0)
+                        .OrderByDescending(p => p.reportCount)  // Sắp xếp giảm dần
+                        .ToListAsync();
+            return result;
         }
     }
 }

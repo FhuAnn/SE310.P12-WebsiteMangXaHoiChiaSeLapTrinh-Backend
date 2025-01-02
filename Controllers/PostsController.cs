@@ -207,7 +207,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 
         // PUT: api/Posts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut]
         [ValidateModel]
         public async Task<IActionResult> UpdatePost(UpdatePostRequestDto updatePostRequestDto)
         {

@@ -310,17 +310,17 @@ public partial class Stackoverflow1511Context : DbContext
                 .HasForeignKey(e => e.TagId);
         });
 
-        modelBuilder.Entity<Report>()
-            .HasOne(r => r.User)
-            .WithMany(u => u.Reports)
-            .HasForeignKey(r => r.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+        //modelBuilder.Entity<Report>()
+        //    .HasOne(r => r.User)
+        //    .WithMany(u => u.Reports)
+        //    .HasForeignKey(r => r.UserId)
+        //    .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Report>()
-           .HasOne(r => r.Post)
-           .WithMany(p => p.Reports)
-           .HasForeignKey(r => r.PostId)    
-           .OnDelete(DeleteBehavior.Cascade);
+        //modelBuilder.Entity<Report>()
+        //   .HasOne(r => r.Post)
+        //   .WithMany(p => p.Reports)
+        //   .HasForeignKey(r => r.PostId)    
+        //   .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Vote>()
        .HasOne(v => v.User)

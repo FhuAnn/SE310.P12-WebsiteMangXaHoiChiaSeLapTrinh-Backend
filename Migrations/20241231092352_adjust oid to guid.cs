@@ -18,7 +18,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 
             // 2. Tạo cột mới với GUID
             migrationBuilder.AddColumn<Guid>(
-                name: "TempId",
+                name: "Id",
                 table: "Votes",
                 nullable: false,
                 defaultValueSql: "NEWID()");
@@ -39,6 +39,34 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                 table: "Votes");
 
             // 6. Đổi tên cột mới thành 'Id' (giữ nguyên tên cột)
+            migrationBuilder.RenameColumn(
+                name: "TempId",
+                newName: "Id",
+                table: "Votes");
+            // 1. Xóa khóa chính hiện tại
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Votes",
+                table: "Votes");
+
+            // 2. Tạo cột mới với kiểu uniqueidentifier
+            migrationBuilder.AddColumn<Guid>(
+                name: "TempId",
+                table: "Votes",
+                nullable: false,
+                defaultValueSql: "NEWID()"); // Tạo GUID tự động
+
+            // 3. Đặt cột mới làm khóa chính
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Votes",
+                table: "Votes",
+                column: "TempId");
+
+            // 4. Xóa cột cũ
+            migrationBuilder.DropColumn(
+                name: "Id",
+                table: "Votes");
+
+            // 5. Đổi tên cột mới thành 'Id' (giữ nguyên tên cột)
             migrationBuilder.RenameColumn(
                 name: "TempId",
                 newName: "Id",

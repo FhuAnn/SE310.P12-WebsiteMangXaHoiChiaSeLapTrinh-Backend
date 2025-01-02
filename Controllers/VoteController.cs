@@ -25,6 +25,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<IActionResult> VoteDetail(Guid postId)
         {
             var voteDetails = await voteRepository.GetVoteDetails(postId);
+            if (voteDetails == null)
+            {
+                return NotFound();  // Nếu không tìm thấy bài đăng, trả về 404.
+            }
             return Ok(voteDetails);
         }
 

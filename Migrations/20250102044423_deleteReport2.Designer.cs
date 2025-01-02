@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
@@ -11,9 +12,11 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 {
     [DbContext(typeof(Stackoverflow1511Context))]
-    partial class Stackoverflow1511ContextModelSnapshot : ModelSnapshot
+    [Migration("20250102044423_deleteReport2")]
+    partial class deleteReport2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,34 +239,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("posttag", (string)null);
-                });
-
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Report", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ReportedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Role", b =>
@@ -568,25 +543,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Report", b =>
-                {
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Post", "Post")
-                        .WithMany("Reports")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.User", "User")
-                        .WithMany("Reports")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.UserRole", b =>
                 {
                     b.HasOne("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Role", "Role")
@@ -674,8 +630,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 
                     b.Navigation("Posttags");
 
-                    b.Navigation("Reports");
-
                     b.Navigation("Votes");
                 });
 
@@ -704,8 +658,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("Posts");
-
-                    b.Navigation("Reports");
 
                     b.Navigation("UserRoles");
 

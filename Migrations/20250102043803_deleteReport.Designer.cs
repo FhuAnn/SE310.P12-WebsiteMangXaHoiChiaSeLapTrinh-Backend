@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
@@ -11,9 +12,11 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 {
     [DbContext(typeof(Stackoverflow1511Context))]
-    partial class Stackoverflow1511ContextModelSnapshot : ModelSnapshot
+    [Migration("20250102043803_deleteReport")]
+    partial class deleteReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,7 +266,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reports");
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain.Role", b =>
