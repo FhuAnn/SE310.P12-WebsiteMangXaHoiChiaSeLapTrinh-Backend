@@ -29,6 +29,8 @@ public partial class Post
 
     [NotMapped]
     public List<string>? ImageUrls { get; set; } = new List<string>();
+    [NotMapped]
+    public int noOfReports { get; set; } = 0;
 
     public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
 

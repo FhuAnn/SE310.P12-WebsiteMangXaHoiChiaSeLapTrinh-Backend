@@ -102,7 +102,8 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
                     {
                         TagId = pt.TagId,
                         Tag=pt.Tag
-                    }).ToList()
+                    }).ToList(),
+                    noOfReports = p.Reports.Where(r=>r.PostId==p.Id).Count()
                 }).ToListAsync();
 
             return posts;

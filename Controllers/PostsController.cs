@@ -57,11 +57,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Get Data from Database - Domain models
             var postDomains = await postRepository.GetPostHomesAsync();
             var postDtos = mapper.Map<List<HomePostDto>>(postDomains);
-            foreach (var post in postDtos)
-            {
-                var noOfReports = await reportRepository.noOfReports(post.Id);
-                post.noOfReports = noOfReports;
-            }
             //Convert Domain to Dto
             return Ok(postDtos);
         }
@@ -72,12 +67,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Get Data from Database - Domain models
             var postDomains = await postRepository.GetPostHomesAsync();
             var postDtos = mapper.Map<List<HomePostDto>>(postDomains);
-            foreach (var post in postDtos)
-            {
-                var noOfReports = await reportRepository.noOfReports(post.Id);
-                post.noOfReports=noOfReports;
-
-            }
             //Convert Domain to Dto
             return Ok(postDtos);
         }
