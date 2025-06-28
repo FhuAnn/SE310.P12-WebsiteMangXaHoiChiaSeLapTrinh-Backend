@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -14,99 +15,90 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   /* [Authorize]*/
-
-    public class CommentsController : ControllerBase
+    [Authorize]
+    public class CommentController : ControllerBase
     {
-        private readonly ICommentRepository commentRepository;
+        private readonly ICommentService _commentService;
         private readonly IMapper mapper;
 
-        public CommentsController(ICommentRepository commentRepository, IMapper mapper)
+        public CommentController(ICommentService commentService, IMapper mapper)
         {
-            this.commentRepository = commentRepository;
+            _commentService = commentService;
             this.mapper = mapper;
         }
 
-        // GET: api/Comments
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpPost("post/{postId}")]
+        public async Task<ActionResult<Comment>> AddCommentToPost(Guid postId, [FromBody] CommentRequest request)
         {
-            //Get Data from Database - Domain models
-            var commentDomain = await commentRepository.GetAllAsync();
-            //Convert Domain to Dto
-            return Ok(mapper.Map<List<CommentDto>>(commentDomain));
-        }
-        // GET: api/Comments/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetById(Guid id)
-        {
-            //Get answer model from DB
-            var commentDomain = await commentRepository.GetByIdAsync(x=>x.Id==id);
-
-            if (commentDomain == null)
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier); // Lấy userId từ JWT token
+            if (string.IsNullOrEmpty(userIdString))
             {
-                return NotFound();
+                return Unauthorized("User ID is missing in the token.");
             }
 
-            //Return DTO back to client
-            return Ok(mapper.Map<CommentDto>(commentDomain));
-        }
-
-        // POST: api/Comments
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        [ValidateModel]
-        public async Task<ActionResult<Comment>> CreateComment([FromBody] AddCommentRequestDto addCommentDto)
-        {
-            //Convert DTO to Domain Model
-            var commentDomain = mapper.Map<Comment>(addCommentDto);
-
-            //Use Domain Model to create Comment
-            commentDomain = await commentRepository.CreateAsync(commentDomain);
-
-            //Convert Domain Model back to DTO
-            var CommentDto = mapper.Map<CommentDto>(commentDomain);
-            return CreatedAtAction(nameof(GetById), new { id = CommentDto.Id }, CommentDto);
-        }
-
-        // PUT: api/Comments/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        [ValidateModel]
-        public async Task<IActionResult> UpdateComment(Guid id, UpdateCommentRequestDto updateCommentRequestDto)
-        {
-            //Map DTO to Domain Model
-            var commentDomain = mapper.Map<Comment>(updateCommentRequestDto);
-
-            //Check if region exits
-            commentDomain = await commentRepository.UpdateAsync(x => x.Id == id, entity =>
+            // Kiểm tra xem userId có phải là một GUID hợp lệ không
+            if (!Guid.TryParse(userIdString, out var userId))
             {
-                entity.Body = commentDomain.Body;
-                entity.Id = commentDomain.Id;
-            });
-            if (commentDomain == null) { return NotFound(); }
-
-            //Convert Domain Model to DTO
-            return Ok(mapper.Map<CommentDto>(commentDomain));
-
+                return BadRequest("Invalid user ID format.");
+            }
+            var comment = await _commentService.AddCommentToPostAsync(postId, request.Body, userId);
+            var commentDto = mapper.Map<CommentDto>(comment);
+            return Ok(commentDto);
         }
 
-        // DELETE: api/Comments/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteComment(Guid id)
+        [HttpPost("answer/{answerId}")]
+        public async Task<ActionResult<Comment>> AddCommentToAnswer(Guid answerId, [FromBody] CommentRequest request)
         {
-            //Check if region exits
-            var commentDomain = await commentRepository.DeleteAsync(x => x.Id == id);
-            if (commentDomain == null) { return NotFound(); }
-
-            //Map Domain Model to DTO
-            return Ok(mapper.Map<Comment>(commentDomain));
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var comment = await _commentService.AddCommentToAnswerAsync(answerId, request.Body, Guid.Parse(userId));
+            var commentDto = mapper.Map<CommentDto>(comment);
+            return Ok(commentDto);
         }
 
+        
+
+        [HttpGet("post/{postId}")]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetPostComments(Guid postId)
+        {
+            var comments = await _commentService.GetCommentsByPostAsync(postId);
+            var commentDto = mapper.Map<List<CommentDto>>(comments);
+            return Ok(commentDto);
+        }
+
+        [HttpGet("answer/{answerId}")]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetAnswerComments(Guid answerId)
+        {
+            var comments = await _commentService.GetCommentsByAnswerAsync(answerId);
+            var commentDto = mapper.Map<List<CommentDto>>(comments);
+
+            return Ok(commentDto);
+        }
+
+        [HttpPut("{commentId}")]
+        public async Task<ActionResult<Comment>> UpdateComment(Guid commentId, [FromBody] CommentRequest request)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var updatedComment = await _commentService.UpdateCommentAsync(commentId, request.Body, Guid.Parse(userId));
+            var commentDto = mapper.Map<CommentDto>(updatedComment);
+
+            return Ok(commentDto);
+        }
+
+        // API endpoint xóa bình luận
+        [HttpDelete("{commentId}")]
+        public async Task<ActionResult> DeleteComment(Guid commentId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _commentService.DeleteCommentAsync(commentId, Guid.Parse(userId));
+
+            if (!result) return NotFound("Comment not found or you don't have permission to delete this comment.");
+            return NoContent();
+        }
     }
 }

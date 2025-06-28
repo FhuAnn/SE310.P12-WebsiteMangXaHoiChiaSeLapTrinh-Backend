@@ -6,9 +6,9 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class SQLRoleRepository : StackOverflowRepository<Role>,IRoleRepository
     {
-        private readonly StackOverflowDBContext dbContext;
+        private readonly Stackoverflow1511Context dbContext;
 
-        public SQLRoleRepository(StackOverflowDBContext dbContext):base(dbContext) 
+        public SQLRoleRepository(Stackoverflow1511Context dbContext):base(dbContext) 
         {
             this.dbContext = dbContext;
         }

@@ -11,6 +11,7 @@ using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 
@@ -25,7 +26,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         private readonly IImageRepository imageRepository;
 
         public UsersController(IUserRepository userRepository,
-            IMapper mapper,IImageRepository imageRepository)
+            IMapper mapper, IImageRepository imageRepository)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
@@ -37,16 +38,30 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             //Get Data from Database - Domain models
-            var userDomain = await userRepository.GetAllAsync();
+            var userDomain = await userRepository.GetAllUserAsync();
             //Convert Domain to Dto
             return Ok(mapper.Map<List<UserDto>>(userDomain));
+        }
+
+        [HttpGet]
+        [Route("getUserByEmail")]
+        public async Task<ActionResult<User>> GetUserByEmail([FromQuery] string email)
+        {
+            //Get Data from Database - Domain models
+            var userDomain = await userRepository.GetUserByEmailAsync(email);
+            if (userDomain == null)
+            {
+                return NotFound();
+            }
+            //Convert Domain to Dto
+            return Ok(mapper.Map<AuthenUserDto>(userDomain));
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(Guid id)
         {
-            var user = await userRepository.GetByIdAsync(u => u.Id==id);
+            var user = await userRepository.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -67,22 +82,13 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             {
                 entity.Username = updateCommentRequestDto.Username;
                 entity.Email = updateCommentRequestDto.Email;
-                entity.UpdatedAt= DateTime.Now;
+                entity.Gravatar = updateCommentRequestDto.Gravatar;
+                entity.UpdatedAt = DateTime.Now;
             });
             if (userDomain == null) { return NotFound(); }
 
             //Convert Domain Model to DTO
             return Ok(mapper.Map<UserDto>(userDomain));
-        }
-
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
-        {
-            var userInsert = await userRepository.CreateAsync(user);
-
-            return CreatedAtAction("GetUser", new { id = userInsert.Id }, userInsert);
         }
 
         // DELETE: api/Users/5
@@ -106,17 +112,17 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             ValidateFileUpload(inputFile.file);
             if (ModelState.IsValid)
             {
-           
+
                 // Kiểm tra và xử lý ảnh
                 var image = new Image
                 {
                     file = inputFile.file,
-                    fileExtension = Path.GetExtension(inputFile.file.FileName),
-                    fileSizeInBytes = inputFile.file.Length,
-                    userId = inputFile.targetId
+                    FileExtension = Path.GetExtension(inputFile.file.FileName),
+                    FileSizeInBytes = inputFile.file.Length,
+                    UserId = inputFile.targetId
                     //FilePath = await SaveImageToLocal(file)
                 };
-                
+
                 // Lưu ảnh vào cơ sở dữ liệu
                 image = await imageRepository.Upload(image);
                 var imageDto = mapper.Map<ImageDto>(image);
@@ -140,5 +146,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             }
         }
 
+
+        
     }
 }

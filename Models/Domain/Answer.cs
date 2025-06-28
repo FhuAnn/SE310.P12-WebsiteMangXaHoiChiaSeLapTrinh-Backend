@@ -5,13 +5,13 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 
 public partial class Answer
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Body { get; set; } = null!;
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public Guid? UserId { get; set; }
 
@@ -20,6 +20,8 @@ public partial class Answer
     public int Upvote { get; set; }
 
     public int Downvote { get; set; }
+
+    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual Post? Post { get; set; }
 

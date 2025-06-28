@@ -6,9 +6,13 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Add;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Get;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
@@ -35,15 +39,14 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         public async Task<ActionResult> GetTags()
         {
             //Get Data from Database - Domain models
-            var tagDomain = await tagRepository.GetAllAsync();
-
+            var tagDomain = await tagRepository.GetTagsAsync();
             //Convert Domain to Dto
             return Ok(mapper.Map<List<TagDto>>(tagDomain));
         }
 
         // GET: api/Tags/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tag>> GetTag(Guid id)
+        public async Task<ActionResult<Tag>> GetTagById(Guid id)
         {
             var tag = await tagRepository.GetByIdAsync(t => t.Id == id);
 
@@ -58,34 +61,65 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
         // PUT: api/Tags/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTag(Guid id, Tag tag)
+        public async Task<IActionResult> PutTag(Guid id, UpdateTagRequestDto updateTagRequestDto)
         {
-             await tagRepository.UpdateAsync(t => t.Id == id, entity =>
+            var tagDomain = await tagRepository.UpdateAsync(t => t.Id == id, entity =>
             {
-                entity = tag;
+                entity.Tagname = updateTagRequestDto.Tagname;
+                entity.Description = updateTagRequestDto.Description;
+                entity.UpdatedAt = DateTime.Now;
             });
-
-            return NoContent();
+            return Ok(tagDomain);
         }
 
         // POST: api/Tags
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Tag>> PostTag(Tag tag)
+        public async Task<ActionResult<Tag>> PostTag(AddTagRequestDto addTagRequestDto)
         {
-            var tagCreate = await tagRepository.CreateAsync(tag);
-            
-            return CreatedAtAction("GetTag", new { id = tagCreate.Id }, tagCreate);
+            var tagDomain = mapper.Map<Tag>(addTagRequestDto);
+            var tagCreate = await tagRepository.CreateAsync(tagDomain);
+            return CreatedAtAction("GetTagById", new { id = tagCreate.Id }, tagCreate);
         }
 
         // DELETE: api/Tags/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTag(Guid id)
         {
-            await tagRepository.DeleteAsync(t => t.Id == id);
-            
+            var result = await tagRepository.DeleteTagAsync(id);
 
-            return NoContent();
+            if (result)
+            {
+                return Ok("Tag deleted successfully");
+            }
+            else
+            {
+                return NotFound("Tag not found");
+            }
+        }
+
+        [HttpGet("getWatchedTagByUserId")]
+        public async Task<IActionResult> GetWatchedTag(Guid userId)
+        {
+            var watchedTags = await watchedTagRepository.GetWatchedTagByUserIdAsync(userId);
+            if (watchedTags == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(mapper.Map<List<GetTagDto>>(watchedTags));
+        }
+
+        [HttpGet("getIgnoredTagByUserId")]
+        public async Task<IActionResult> GetIgnoredTags(Guid userId)
+        {
+            var ignoredTags = await ignoreTagRepository.GetIgnoredTagByUserIdAsync(userId);
+            if (ignoredTags == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<List<GetTagDto>>(ignoredTags));
         }
 
         [HttpPost("watch")]

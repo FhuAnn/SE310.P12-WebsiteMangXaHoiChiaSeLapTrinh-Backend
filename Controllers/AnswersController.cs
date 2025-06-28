@@ -22,11 +22,11 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
     /*[Authorize]*/
     public class AnswersController : ControllerBase
     {
-        private readonly StackOverflowDBContext _context;
+        private readonly Stackoverflow1511Context _context;
         private readonly IAnswerRepository answerRepository;
         private readonly IMapper mapper;
 
-        public AnswersController(StackOverflowDBContext context,IAnswerRepository answerRepository,IMapper mapper)
+        public AnswersController(Stackoverflow1511Context context,IAnswerRepository answerRepository,IMapper mapper)
         {
             _context = context;
             this.answerRepository = answerRepository;
@@ -42,6 +42,17 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Convert Domain to Dto
             return Ok(mapper.Map<List<AnswerDto>>(answerDomain));
         }
+
+        // GET: api/Answers
+        [HttpGet("GetTheMostAnswer")]
+        public async Task<IActionResult> GetTheMostAnswer()
+        {
+            //Get Data from Database - Domain models
+            var answerDomain = await answerRepository.GetAllAsync();
+            //Convert Domain to Dto
+            return Ok(mapper.Map<List<AnswerDto>>(answerDomain));
+        }
+
         // GET: api/Answers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Answer>> GetById(Guid id)
@@ -57,7 +68,20 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             //Return DTO back to client
             return Ok(mapper.Map<AnswerDto>(answerDomain));
         }
+        [HttpGet("answerByUserId")]
+        public async Task<ActionResult<Answer>> GetAnswerByUserId(Guid id)
+        {
+            //Get answer model from DB
+            var answerDomain = await answerRepository.GetAnswerByUserIdAsync(id);
 
+            if (answerDomain == null)
+            {
+                return NotFound();
+            }
+
+            //Return DTO back to client
+            return Ok(mapper.Map<List<AnswerDto>>(answerDomain));
+        }
         // POST: api/Answers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -88,7 +112,7 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Controllers
             answerDomain = await answerRepository.UpdateAsync(x=> x.Id==id, entity =>
             {
                 entity.Body = answerDomain.Body;
-                entity.Id = answerDomain.Id;
+                entity.UpdatedAt = DateTime.Now;
             });
             if(answerDomain == null) { return NotFound(); }
             

@@ -6,15 +6,15 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update
     public class UpdatePostRequestDto
     {
         [Required]
+        public Guid Id { get; set; }
+        [Required]
         public string Title { get; set; } = null!;
 
         [Required]
-        public string Body { get; set; } = null!;
-
-        public int Views { get; set; }
-
+        public string Tryandexpecting { get; set; } = null!;
         [Required]
-        public DateTime UpdatedAt { get; set; }
+        public string Detailproblem { get; set; } = null!;
 
     }
 }
+    

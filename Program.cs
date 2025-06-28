@@ -4,20 +4,30 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using NZWalk.API.Repositories;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.CustomIdentityValidator;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Mapping;
-using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services;
+using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Services.Implement;
 using System.Text;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+/*builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Cấu hình JsonSerializerOptions để bỏ qua các trường null và các danh sách rỗng
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+    });*/
 builder.Services.AddHttpContextAccessor();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/
@@ -51,7 +61,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddDbContext<StackOverflowDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectstring")));
+builder.Services.AddDbContext<Stackoverflow1511Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectstring")));
 builder.Services.AddScoped<IAnswerRepository, SQLAnswerRepository>();
 builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
 builder.Services.AddScoped<IUserRoleRepository, SQLUserRoleRepository>();
@@ -64,7 +74,11 @@ builder.Services.AddScoped<IIgnoreTagRepository, SQLIgnoredTagRepository>();
 builder.Services.AddScoped<IImageRepository, LocalImageRepositiory>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPosttagRepository, SQLPosttagRepository>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IReportRepository, SQLReportRepository>();
+builder.Services.AddScoped<IVoteRepository, SQLVoteRepository>();
 builder.Services.AddScoped(typeof(IStackOverflowRepository<>),typeof(StackOverflowRepository<>));
+
 builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
@@ -79,11 +93,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey =
-        new SymmetricSecurityKey(
+        new SymmetricSecurityKey(   
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     }
  );
-
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -103,6 +116,8 @@ builder.Services.AddCors(options =>
                         .AllowAnyMethod());
 });
 
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

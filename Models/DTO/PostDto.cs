@@ -1,4 +1,5 @@
 ﻿using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
+using System.Text.Json.Serialization;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
 {
@@ -17,17 +18,17 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
-
         public Guid? UserId { get; set; }
-
         public int Upvote { get; set; }
-
         public int Downvote { get; set; }
-
+        public bool isDeleted { get; set; }
         public virtual ICollection<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
+        public virtual ICollection<CommentDto> Comments { get; set; } = new List<CommentDto>();
 
         public virtual ICollection<PosttagDto> Posttags { get; set; } = new List<PosttagDto>();
 
         public virtual UserDto? User { get; set; }
+        public List<string>? ImageUrls { get; set; } = new List<string>();
+
     }
 }

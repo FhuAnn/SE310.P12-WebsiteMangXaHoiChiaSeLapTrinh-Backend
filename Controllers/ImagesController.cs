@@ -11,17 +11,17 @@ namespace NZWalk.API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
+        private readonly IImageRepository imageRepositiory;
+
         public ImagesController(IImageRepository imageRepositiory)
         {
-            ImageRepositiory = imageRepositiory;
+            this.imageRepositiory = imageRepositiory;
         }
-
-        public IImageRepository ImageRepositiory { get; }
-
+       
         //Post: api/Images/Upload
         [HttpPost]
-        [Route("Upload/{postId}")]
-        public async Task<IActionResult> UpLoad(Guid postId,[FromForm] ImagesUploadRequestDto request)
+        [Route("Upload/{PostId}")]
+        public async Task<IActionResult> UpLoad([FromForm] ImagesUploadRequestDto request)
         {
             ValidateFileUpload(request);
             if (ModelState.IsValid)
@@ -30,12 +30,12 @@ namespace NZWalk.API.Controllers
                 var imageDomainModel = new Image
                 {
                     file = request.File,
-                    fileExtension = Path.GetExtension(request.File.FileName),
-                    fileSizeInBytes = request.File.Length
+                    FileExtension = Path.GetExtension(request.File.FileName),
+                    FileSizeInBytes = request.File.Length
                 };
 
                 //user repository to upload image
-                await ImageRepositiory.Upload(imageDomainModel);
+                await imageRepositiory.Upload(imageDomainModel);
                 return Ok(imageDomainModel);
             }
             return BadRequest(ModelState);

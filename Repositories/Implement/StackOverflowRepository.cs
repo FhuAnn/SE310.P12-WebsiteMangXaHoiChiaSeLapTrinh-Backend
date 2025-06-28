@@ -2,14 +2,15 @@
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models;
 using SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.Domain;
 using System.Linq.Expressions;
+using System.Linq;
 
 namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
 {
     public class StackOverflowRepository<T> : IStackOverflowRepository<T> where T : class
     {
-        private readonly StackOverflowDBContext dbContext;
+        private readonly Stackoverflow1511Context dbContext;
         private DbSet<T> _dbSet;
-        public StackOverflowRepository(StackOverflowDBContext dbContext)
+        public StackOverflowRepository(Stackoverflow1511Context dbContext)
         {
             this.dbContext = dbContext;
             _dbSet= dbContext.Set<T>();
@@ -32,10 +33,10 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories.Implement
             await dbContext.SaveChangesAsync();
             return existingRecord;
         }
-        public async Task<List<T>> GetAllAsync()
-        {
-            return await _dbSet.ToListAsync();
-        }
+            public async Task<List<T>> GetAllAsync()
+            {
+                return await _dbSet.ToListAsync();
+            }
         public async Task<T> GetByIdAsync(Expression<Func<T, bool>> filter)
         {
             return await _dbSet.FirstOrDefaultAsync(filter);

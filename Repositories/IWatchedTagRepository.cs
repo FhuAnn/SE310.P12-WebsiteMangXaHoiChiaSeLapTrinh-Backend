@@ -5,5 +5,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Repositories
 {
     public interface IWatchedTagRepository : IStackOverflowRepository<WatchedTag>
     {
+        Task<List<Tag>> GetWatchedTagByUserIdAsync(Guid userId);
     }
 }

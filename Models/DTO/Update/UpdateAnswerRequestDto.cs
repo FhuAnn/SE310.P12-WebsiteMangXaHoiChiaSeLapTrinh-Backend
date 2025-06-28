@@ -6,7 +6,6 @@ namespace SE310.P12_WebsiteMangXaHoiChiaSeLapTrinh.Models.DTO.Update
     {
         [Required]
         public string Body { get; set; } = null!;
-        [Required]
-        public DateTime UpdatedAt { get; set; }
+        
     }
 }
